@@ -27,10 +27,12 @@ CREATE TABLE CW2_Trails (
 CREATE TABLE CW2_COMPLETED_TRAILS (
     User_ID INT,
     Trail_ID INT,
+    Completed_Trail_Count INT DEFAULT 0,
     PRIMARY KEY (User_ID, Trail_ID),
     FOREIGN KEY(User_ID) REFERENCES CW2_UserProfile_CompletedTrials_JT(User_ID),
     FOREIGN KEY(Trail_ID) REFERENCES CW2_Trails(Trail_ID)
 );
+
 
 -- Creating CW2_Stats table
 CREATE TABLE CW2_Stats (
