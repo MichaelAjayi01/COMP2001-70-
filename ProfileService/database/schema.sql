@@ -38,6 +38,7 @@ CREATE TABLE CW2_COMPLETED_TRAILS (--
     PRIMARY KEY (User_ID, Trail_ID),
     FOREIGN KEY (User_ID, Trail_ID) REFERENCES CW2_UserProfile_CompletedTrails_JT(User_ID, Trail_ID)
 );
+
 -- Creating CW2_Audit_Log table
 CREATE TABLE CW2_Audit_Log (
     Audit_ID INT IDENTITY(1,1) PRIMARY KEY,
