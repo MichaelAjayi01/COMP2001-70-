@@ -92,58 +92,65 @@ namespace ProfileService.Models
         }
     }
 
-    public class CompletedTrail
+public class CompletedTrail
+{
+    // Properties
+    [Key]
+    [Column(Order = 1)] // Specify the order for composite keys
+    public int User_ID { get; set; }
+
+    [Key]
+    [Column(Order = 2)]
+    public int Trail_ID { get; set; }
+
+    public int Completed_Trail_Count { get; set; }
+
+    // Navigation properties
+    [ForeignKey("User_ID,Trail_ID")] // Correct the format of the foreign key attribute
+    public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
+
+    // Constructor
+    public CompletedTrail()
     {
-        // Properties
-        [ForeignKey("UserProfileCompletedTrail")]
-        public int User_ID { get; set; }
+        // Initialize properties
+        User_ID = 0;
+        Trail_ID = 0;
+        Completed_Trail_Count = 0;
 
-        [ForeignKey("UserProfileCompletedTrail")]
-        public int Trail_ID { get; set; }
-
-        public int Completed_Trail_Count { get; set; }
-
-        // Navigation properties
-        [ForeignKey("User_ID, Trail_ID")] // Define the composite foreign key
-        public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
-
-        // Constructor
-        public CompletedTrail()
-        {
-            // Initialize properties
-            User_ID = 0;
-            Trail_ID = 0;
-            Completed_Trail_Count = 0;
-
-            // Initialize navigation properties
-            UserProfileCompletedTrail = new UserProfileCompletedTrail();
-        }
+        // Initialize navigation properties
+        UserProfileCompletedTrail = new UserProfileCompletedTrail();
     }
+}
+
+
 
     public class AuditLog
+{
+    // Properties
+    [Key] // This property is the primary key
+    public int Audit_ID { get; set; }
+
+    public int User_ID { get; set; }
+    public string Operation_Type { get; set; }
+    public DateTime Operation_DateTime { get; set; }
+    public string Operation_Details { get; set; }
+
+    // Navigation property
+    public Profile User { get; set; }
+
+    // Constructor
+    public AuditLog()
     {
-        // Properties
-        public int Audit_ID { get; set; }
-        public int User_ID { get; set; }
-        public string Operation_Type { get; set; }
-        public DateTime Operation_DateTime { get; set; }
-        public string Operation_Details { get; set; }
+        // Initialize properties
+        Audit_ID = 0;
+        User_ID = 0;
+        Operation_Type = "";
+        Operation_DateTime = DateTime.MinValue;
+        Operation_Details = "";
 
-        // Navigation property
-        public Profile User { get; set; }
-
-        // Constructor
-        public AuditLog()
-        {
-            // Initialize properties
-            Audit_ID = 0;
-            User_ID = 0;
-            Operation_Type = "";
-            Operation_DateTime = DateTime.MinValue;
-            Operation_Details = "";
-
-            // Initialize navigation properties
-            User = new Profile();
-        }
+        // Initialize navigation properties
+        User = new Profile();
     }
+}
+
 }
