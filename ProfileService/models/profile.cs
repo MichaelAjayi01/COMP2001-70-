@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProfileService.Models
 {
+    [Table("CW2_USER_PROFILE")]
     public class Profile
     {
         // Properties
@@ -58,6 +59,7 @@ namespace ProfileService.Models
         }
     }
 
+    [Table("CW2_Trails")]
     public class Trail
     {
         // Properties
@@ -84,6 +86,7 @@ namespace ProfileService.Models
         }
     }
 
+    [Table("CW2_UserProfile_CompletedTrails_JT")]
     public class UserProfileCompletedTrail
 {
     // Properties
@@ -117,6 +120,8 @@ namespace ProfileService.Models
         CompletedTrail = new CompletedTrail();
     }
 }
+
+[Table("CW2_COMPLETED_TRAILS")]
 public class CompletedTrail
 {
     // Properties
@@ -141,6 +146,7 @@ public class CompletedTrail
     }
 }
 
+    [Table("CW2_Audit_Log")]
     public class AuditLog
 {
     // Properties
