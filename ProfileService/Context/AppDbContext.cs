@@ -8,10 +8,6 @@ namespace ProfileService.Models
         public DbSet<Trail> Trails { get; set; }
         public DbSet<UserProfileCompletedTrail> UserProfileCompletedTrails { get; set; }
         public DbSet<CompletedTrail> CompletedTrails { get; set; }
-        public DbSet<Stats> Stats { get; set; }
-        public DbSet<TrailReviewJunction> TrailReviewJunctions { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-        public DbSet<CustomRoute> CustomRoutes { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

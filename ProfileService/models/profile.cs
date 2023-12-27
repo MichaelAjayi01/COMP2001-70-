@@ -24,9 +24,6 @@ namespace ProfileService.Models
 
         // Navigation properties
         public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
-        public Stats Stats { get; set; }
-        public List<Review> Reviews { get; set; }
-        public List<CustomRoute> CustomRoutes { get; set; }
         public List<AuditLog> AuditLogs { get; set; }
 
         // Constructor
@@ -45,9 +42,6 @@ namespace ProfileService.Models
 
             // Initialize navigation properties
             CompletedTrails = new List<UserProfileCompletedTrail>();
-            Stats = new Stats();
-            Reviews = new List<Review>();
-            CustomRoutes = new List<CustomRoute>();
             AuditLogs = new List<AuditLog>();
         }
     }
@@ -60,7 +54,6 @@ namespace ProfileService.Models
 
         // Navigation properties
         public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
-        public List<TrailReviewJunction> TrailReviews { get; set; }
 
         // Constructor
         public Trail()
@@ -71,7 +64,6 @@ namespace ProfileService.Models
 
             // Initialize navigation properties
             CompletedTrails = new List<UserProfileCompletedTrail>();
-            TrailReviews = new List<TrailReviewJunction>();
         }
     }
 
@@ -125,102 +117,6 @@ namespace ProfileService.Models
 
             // Initialize navigation properties
             UserProfileCompletedTrail = new UserProfileCompletedTrail();
-        }
-    }
-
-
-
-    public class Stats
-    {
-        // Properties
-        [ForeignKey("User")]
-        public int Stats_ID { get; set; }
-        [ForeignKey("User")]
-        public int User_ID { get; set; }
-
-        // Navigation property
-        public Profile User { get; set; }
-
-        // Constructor
-        public Stats()
-        {
-            // Initialize properties
-            Stats_ID = 0;
-            User_ID = 0;
-
-            // Initialize navigation properties
-            User = new Profile();
-        }
-    }
-
-    public class TrailReviewJunction
-    {
-        // Properties
-        public int Trail_Review_ID { get; set; }
-        public int Trail_ID { get; set; }
-        public int Review_ID { get; set; }
-
-        // Navigation property
-        public Trail Trail { get; set; }
-        public Review Review { get; set; }
-
-        // Constructor
-        public TrailReviewJunction()
-        {
-            // Initialize properties
-            Trail_Review_ID = 0;
-            Trail_ID = 0;
-            Review_ID = 0;
-
-            // Initialize navigation properties
-            Trail = new Trail();
-            Review = new Review();
-        }
-    }
-
-    public class Review
-    {
-        // Properties
-        public int Review_ID { get; set; }
-        public int Trail_Review_ID { get; set; }
-        public int User_ID { get; set; }
-
-        // Navigation properties
-        public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
-        public Profile User { get; set; }
-
-        // Constructor
-        public Review()
-        {
-            // Initialize properties
-            Review_ID = 0;
-            Trail_Review_ID = 0;
-            User_ID = 0;
-
-            // Initialize navigation properties
-            UserProfileCompletedTrail = new UserProfileCompletedTrail();
-            User = new Profile();
-        }
-    }
-
-    public class CustomRoute
-    {
-        // Properties
-        public int Custom_Route_ID { get; set; }
-        public int User_ID { get; set; }
-
-        // Navigation property
-        public Profile User { get; set; }
-
-        // Constructor
-        public CustomRoute()
-        {
-            // Initialize properties
-            Custom_Route_ID = 0;
-            User_ID = 0;
-
-            // Initialize navigation properties
-            User = new Profile();
         }
     }
 
