@@ -16,7 +16,8 @@ namespace ProfileService.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("dist-6-505.uopnet.plymouth.ac.uk");
+            optionsBuilder.UseSqlServer("Server=dist-6-505.uopnet.plymouth.ac.uk;Database=COMP2001_MAjayi;User=MAjayi;Password=OnoE922*;");
+
         }
     }
 }

@@ -101,33 +101,33 @@ namespace ProfileService.Models
     }
 
     public class CompletedTrail
-{
-    // Composite key
-    [Key, Column(Order = 0)]
-    [ForeignKey("UserProfileCompletedTrail")]
-    public int User_ID { get; set; }
-
-    [Key, Column(Order = 1)]
-    [ForeignKey("UserProfileCompletedTrail")]
-    public int Trail_ID { get; set; }
-
-    public int Completed_Trail_Count { get; set; }
-
-    // Navigation properties
-    public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
-
-    // Constructor
-    public CompletedTrail()
     {
-        // Initialize properties
-        User_ID = 0;
-        Trail_ID = 0;
-        Completed_Trail_Count = 0;
+        // Properties
+        [ForeignKey("UserProfileCompletedTrail")]
+        public int User_ID { get; set; }
 
-        // Initialize navigation properties
-        UserProfileCompletedTrail = new UserProfileCompletedTrail();
+        [ForeignKey("UserProfileCompletedTrail")]
+        public int Trail_ID { get; set; }
+
+        public int Completed_Trail_Count { get; set; }
+
+        // Navigation properties
+        [ForeignKey("User_ID, Trail_ID")] // Define the composite foreign key
+        public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
+
+        // Constructor
+        public CompletedTrail()
+        {
+            // Initialize properties
+            User_ID = 0;
+            Trail_ID = 0;
+            Completed_Trail_Count = 0;
+
+            // Initialize navigation properties
+            UserProfileCompletedTrail = new UserProfileCompletedTrail();
+        }
     }
-}
+
 
 
     public class Stats

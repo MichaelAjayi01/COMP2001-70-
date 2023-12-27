@@ -38,38 +38,6 @@ CREATE TABLE CW2_COMPLETED_TRAILS (--
     PRIMARY KEY (User_ID, Trail_ID),
     FOREIGN KEY (User_ID, Trail_ID) REFERENCES CW2_UserProfile_CompletedTrails_JT(User_ID, Trail_ID)
 );
-
--- Creating CW2_Stats table
-CREATE TABLE CW2_Stats (--
-    Stats_ID INT IDENTITY(1,1) PRIMARY KEY,
-    User_ID INT,
-    FOREIGN KEY (User_ID) REFERENCES CW2_USER_PROFILE(User_ID)
-);
-
--- Creating CW2_Trail_Review_JT(Junction Table)
-CREATE TABLE CW2_Trail_Review_JT (--
-    Trail_Review_ID INT IDENTITY(1,1) PRIMARY KEY,
-    Trail_ID INT,
-    Review_ID INT,
-    FOREIGN KEY (Trail_ID) REFERENCES CW2_Trails(Trail_ID)
-);
-
--- Creating CW2_Reviews
-CREATE TABLE CW2_Reviews (--
-    Review_ID INT IDENTITY(1,1) PRIMARY KEY,
-    Trail_Review_ID INT,
-    User_ID INT,
-    FOREIGN KEY (Trail_Review_ID, User_ID) REFERENCES CW2_COMPLETED_TRAILS(User_ID, Trail_ID),
-    FOREIGN KEY (User_ID) REFERENCES CW2_USER_PROFILE(User_ID)
-);
-
--- Creating CW2_Custom_Routes_Table
-CREATE TABLE CW2_Custom_RouteS (
-    Custom_Route_ID INT IDENTITY(1,1) PRIMARY KEY,
-    User_ID INT,
-    FOREIGN KEY (User_ID) REFERENCES CW2_USER_PROFILE(User_ID)
-);
-
 -- Creating CW2_Audit_Log table
 CREATE TABLE CW2_Audit_Log (
     Audit_ID INT IDENTITY(1,1) PRIMARY KEY,
