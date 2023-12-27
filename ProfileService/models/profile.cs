@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProfileService.Models
 {
     public class Profile
     {
         // Properties
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int User_ID { get; set; }
+
+        [Required]
+        [MaxLength(50)]
         public string First_Name { get; set; }
+
+        [Required]
+        [MaxLength(50)]
         public string Last_Name { get; set; }
+
         public string About { get; set; }
         public string Location { get; set; }
         public string Units { get; set; }
@@ -19,7 +27,11 @@ namespace ProfileService.Models
         public float Height { get; set; }
         public float Weight { get; set; }
         public DateTime Birthday { get; set; }
+
+        [Required]
+        [MaxLength(50)]
         public string Set_Password { get; set; }
+
         public byte[] Profile_Picture { get; set; }
 
         // Navigation properties
@@ -37,7 +49,7 @@ namespace ProfileService.Models
             Units = "";
             Calorie_Counter_Info = "";
             Set_Password = "";
-            Profile_Picture = new byte[0]; // You might want to provide a default value or handle it differently
+            Profile_Picture = Array.Empty<byte>(); // You might want to provide a default value or handle it differently
             Birthday = DateTime.MinValue; // Provide a default value for DateTime
 
             // Initialize navigation properties
@@ -49,7 +61,12 @@ namespace ProfileService.Models
     public class Trail
     {
         // Properties
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Trail_ID { get; set; }
+
+        [Required]
+        [MaxLength(100)]
         public string Trail_Name { get; set; }
 
         // Navigation properties
@@ -68,53 +85,55 @@ namespace ProfileService.Models
     }
 
     public class UserProfileCompletedTrail
+{
+    // Properties
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int User_Trail_ID { get; set; }
+
+    public int User_ID { get; set; }
+    public int Trail_ID { get; set; }
+
+    // Navigation properties
+    [ForeignKey("User_ID")]
+    public Profile User { get; set; }
+
+    [ForeignKey("Trail_ID")]
+    public Trail Trail { get; set; }
+
+    public CompletedTrail CompletedTrail { get; set; }
+
+    // Constructor
+    public UserProfileCompletedTrail()
     {
-        // Properties
-        public int User_ID { get; set; }
-        public int Trail_ID { get; set; }
+        // Initialize properties
+        User_Trail_ID = 0;
+        User_ID = 0;
+        Trail_ID = 0;
 
-        // Navigation properties
-        public Profile User { get; set; }
-        public Trail Trail { get; set; }
-        public CompletedTrail CompletedTrail { get; set; }
-
-        // Constructor
-        public UserProfileCompletedTrail()
-        {
-            // Initialize properties
-            User_ID = 0;
-            Trail_ID = 0;
-
-            // Initialize navigation properties
-            User = new Profile();
-            Trail = new Trail();
-            CompletedTrail = new CompletedTrail();
-        }
+        // Initialize navigation properties
+        User = new Profile();
+        Trail = new Trail();
+        CompletedTrail = new CompletedTrail();
     }
-
+}
 public class CompletedTrail
 {
     // Properties
     [Key]
-    [Column(Order = 1)] // Specify the order for composite keys
-    public int User_ID { get; set; }
-
-    [Key]
-    [Column(Order = 2)]
-    public int Trail_ID { get; set; }
+    [ForeignKey("UserProfileCompletedTrail")]
+    public int User_Trail_ID { get; set; }
 
     public int Completed_Trail_Count { get; set; }
 
     // Navigation properties
-    [ForeignKey("User_ID,Trail_ID")] // Correct the format of the foreign key attribute
     public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
 
     // Constructor
     public CompletedTrail()
     {
         // Initialize properties
-        User_ID = 0;
-        Trail_ID = 0;
+        User_Trail_ID = 0;
         Completed_Trail_Count = 0;
 
         // Initialize navigation properties
@@ -122,20 +141,22 @@ public class CompletedTrail
     }
 }
 
-
-
     public class AuditLog
 {
     // Properties
-    [Key] // This property is the primary key
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Audit_ID { get; set; }
 
+    // Foreign key property
     public int User_ID { get; set; }
+
     public string Operation_Type { get; set; }
     public DateTime Operation_DateTime { get; set; }
     public string Operation_Details { get; set; }
 
     // Navigation property
+    [ForeignKey("User_ID")]
     public Profile User { get; set; }
 
     // Constructor
@@ -152,5 +173,4 @@ public class CompletedTrail
         User = new Profile();
     }
 }
-
 }
