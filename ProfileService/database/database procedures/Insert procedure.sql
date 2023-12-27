@@ -1,4 +1,5 @@
--- Insert procedure for CW2_USER_PROFILE
+-- Insert procedure for CW2_USER_PROFILE with data insertion into CW2_Trails
+
 CREATE PROCEDURE InsertUserProfile
     @First_Name NVARCHAR(50),
     @Last_Name NVARCHAR(50),
@@ -10,12 +11,25 @@ CREATE PROCEDURE InsertUserProfile
     @Weight FLOAT,
     @Birthday DATE,
     @Set_Password NVARCHAR(50),
-    @Profile_Picture VARBINARY(MAX)
+    @Profile_Picture VARBINARY(MAX),
+    @Trail_Name NVARCHAR(100), -- Include parameter for Trail information
+    @List_of_Trails NVARCHAR(MAX)
 AS
 BEGIN
+    -- Insert into CW2_USER_PROFILE
     INSERT INTO CW2_USER_PROFILE (First_Name, Last_Name, About, Location, Units, Calorie_Counter_Info, Height, Weight, Birthday, Set_Password, Profile_Picture)
     VALUES (@First_Name, @Last_Name, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture);
 
+    -- Insert into CW2_Trails
+    DECLARE @Trail_ID INT;
+
+    INSERT INTO CW2_Trails (Trail_Name, List_of_Trails)
+    VALUES (@Trail_Name, @List_of_Trails);
+
+    SET @Trail_ID = SCOPE_IDENTITY();
+
+    -- Insert into CW2_Audit_Log
     INSERT INTO CW2_Audit_Log (User_ID, Operation_Type, Operation_DateTime, Operation_Details)
-    VALUES (SCOPE_IDENTITY(), 'INSERT', GETDATE(), 'User profile added.');
+    VALUES (@Trail_ID, 'INSERT', GETDATE(), 'User profile added.');
+
 END;
