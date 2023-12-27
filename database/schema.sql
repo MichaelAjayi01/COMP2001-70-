@@ -69,3 +69,14 @@ CREATE TABLE CW2_Custom_RouteS (
     User_ID INT,
     FOREIGN KEY (User_ID) REFERENCES CW2_USER_PROFILE(User_ID)
 );
+
+-- Creating CW2_Audit_Log table
+CREATE TABLE CW2_Audit_Log (
+    Audit_ID INT IDENTITY(1,1) PRIMARY KEY,
+    User_ID INT, -- If you want to track which user performed the operation
+    Operation_Type NVARCHAR(50) NOT NULL,
+    Operation_DateTime DATETIME NOT NULL,
+    Operation_Details NVARCHAR(MAX),
+    FOREIGN KEY (User_ID) REFERENCES CW2_USER_PROFILE(User_ID) -- If you want to associate the operation with a specific user
+);
+
