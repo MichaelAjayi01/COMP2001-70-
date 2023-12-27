@@ -1,5 +1,4 @@
 -- Creating a modified view with information from CW2_USER_PROFILE, CW2_COMPLETED_TRAILS, and CW2_Trails
-
 CREATE VIEW CW2_User_Profile_View AS
 SELECT
     UP.User_ID,
@@ -14,13 +13,13 @@ SELECT
     UP.Birthday,
     UP.Set_Password,
     UP.Profile_Picture,
-    CT.Trail_ID AS Completed_Trail_ID,
+    CT.User_Trail_ID AS Completed_Trail_ID, -- Updated to use User_Trail_ID
     CT.Completed_Trail_Count,
     T.Trail_Name,
     T.List_of_Trails
 FROM
     CW2_USER_PROFILE UP
 LEFT JOIN
-    CW2_COMPLETED_TRAILS CT ON UP.User_ID = CT.User_ID
+    CW2_UserProfile_CompletedTrails_JT CT ON UP.User_ID = CT.User_ID
 LEFT JOIN
     CW2_Trails T ON CT.Trail_ID = T.Trail_ID;
