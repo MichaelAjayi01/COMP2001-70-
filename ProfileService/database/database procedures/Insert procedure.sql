@@ -3,6 +3,7 @@
 CREATE PROCEDURE InsertUserProfile
     @First_Name NVARCHAR(50),
     @Last_Name NVARCHAR(50),
+    @Email NVARCHAR(100), -- Add parameter for Email
     @About NVARCHAR(MAX),
     @Location NVARCHAR(100),
     @Units NVARCHAR(20),
@@ -12,13 +13,13 @@ CREATE PROCEDURE InsertUserProfile
     @Birthday DATE,
     @Set_Password NVARCHAR(50),
     @Profile_Picture VARBINARY(MAX),
-    @Trail_Name NVARCHAR(100), -- Include parameter for Trail information
+    @Trail_Name NVARCHAR(100),
     @List_of_Trails NVARCHAR(MAX)
 AS
 BEGIN
     -- Insert into CW2_USER_PROFILE
-    INSERT INTO CW2_USER_PROFILE (First_Name, Last_Name, About, Location, Units, Calorie_Counter_Info, Height, Weight, Birthday, Set_Password, Profile_Picture)
-    VALUES (@First_Name, @Last_Name, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture);
+    INSERT INTO CW2_USER_PROFILE (First_Name, Last_Name, Email, About, Location, Units, Calorie_Counter_Info, Height, Weight, Birthday, Set_Password, Profile_Picture)
+    VALUES (@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture);
 
     -- Insert into CW2_Trails
     DECLARE @Trail_ID INT;
