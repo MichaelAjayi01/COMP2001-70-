@@ -60,31 +60,37 @@ namespace ProfileService.Models
     }
 
     [Table("CW2_Trails")]
-    public class Trail
+public class Trail
+{
+    // Properties
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Trail_ID { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string Trail_Name { get; set; }
+
+    [Required]
+    [MaxLength(10)] // Replace MAX_LENGTH with the appropriate max length for List_of_Trails
+    public string List_of_Trails { get; set; } // Add this property
+
+    // Navigation properties
+    public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
+
+    // Constructor
+    public Trail()
     {
-        // Properties
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Trail_ID { get; set; }
+        // Initialize properties
+        Trail_ID = 0;
+        Trail_Name = "";
+        List_of_Trails = ""; // Provide a default value or handle it differently
 
-        [Required]
-        [MaxLength(100)]
-        public string Trail_Name { get; set; }
-
-        // Navigation properties
-        public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
-
-        // Constructor
-        public Trail()
-        {
-            // Initialize properties
-            Trail_ID = 0;
-            Trail_Name = "";
-
-            // Initialize navigation properties
-            CompletedTrails = new List<UserProfileCompletedTrail>();
-        }
+        // Initialize navigation properties
+        CompletedTrails = new List<UserProfileCompletedTrail>();
     }
+}
+
 
     [Table("CW2_UserProfile_CompletedTrails_JT")]
     public class UserProfileCompletedTrail

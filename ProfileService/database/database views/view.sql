@@ -13,7 +13,6 @@ SELECT
     UP.Birthday,
     UP.Set_Password,
     UP.Profile_Picture,
-    CTC.User_Trail_ID AS Completed_Trail_ID,
     CTC.Completed_Trail_Count,
     T.Trail_Name,
     T.List_of_Trails
