@@ -72,7 +72,7 @@ public class Trail
     public string Trail_Name { get; set; }
 
     [Required]
-    [MaxLength(10)] // Replace MAX_LENGTH with the appropriate max length for List_of_Trails
+    [MaxLength(10000)] // Replace MAX_LENGTH with the appropriate max length for List_of_Trails
     public string List_of_Trails { get; set; } // Add this property
 
     // Navigation properties
@@ -152,37 +152,28 @@ public class CompletedTrail
     }
 }
 
-    [Table("CW2_Audit_Log")]
-    public class AuditLog
+[Table("CW2_Audit_Log")]
+public class AuditLog
 {
     // Properties
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Audit_ID { get; set; }
 
-    // Foreign key property
-    public int User_ID { get; set; }
-
     public string Operation_Type { get; set; }
     public DateTime Operation_DateTime { get; set; }
     public string Operation_Details { get; set; }
-
-    // Navigation property
-    [ForeignKey("User_ID")]
-    public Profile User { get; set; }
-
-    // Constructor
+    
     public AuditLog()
     {
         // Initialize properties
         Audit_ID = 0;
-        User_ID = 0;
         Operation_Type = "";
         Operation_DateTime = DateTime.MinValue;
         Operation_Details = "";
-
-        // Initialize navigation properties
-        User = new Profile();
     }
 }
 }
+
+//dotnet ef migrations add InitialCreate
+//dotnet ef database update

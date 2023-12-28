@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProfileService.Models;
 
@@ -11,9 +12,11 @@ using ProfileService.Models;
 namespace ProfileService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231228171218_MaxLengthChange")]
+    partial class MaxLengthChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +33,6 @@ namespace ProfileService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Audit_ID"));
 
-                    b.Property<string>("NewField")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Operation_DateTime")
                         .HasColumnType("datetime2");
 
@@ -45,12 +44,12 @@ namespace ProfileService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProfileUser_ID")
+                    b.Property<int>("User_ID")
                         .HasColumnType("int");
 
                     b.HasKey("Audit_ID");
 
-                    b.HasIndex("ProfileUser_ID");
+                    b.HasIndex("User_ID");
 
                     b.ToTable("CW2_Audit_Log");
                 });
@@ -173,9 +172,13 @@ namespace ProfileService.Migrations
 
             modelBuilder.Entity("ProfileService.Models.AuditLog", b =>
                 {
-                    b.HasOne("ProfileService.Models.Profile", null)
+                    b.HasOne("ProfileService.Models.Profile", "User")
                         .WithMany("AuditLogs")
-                        .HasForeignKey("ProfileUser_ID");
+                        .HasForeignKey("User_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProfileService.Models.CompletedTrail", b =>

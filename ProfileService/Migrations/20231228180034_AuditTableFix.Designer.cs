@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProfileService.Models;
 
@@ -11,9 +12,11 @@ using ProfileService.Models;
 namespace ProfileService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231228180034_AuditTableFix")]
+    partial class AuditTableFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +33,6 @@ namespace ProfileService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Audit_ID"));
 
-                    b.Property<string>("NewField")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Operation_DateTime")
                         .HasColumnType("datetime2");
 
@@ -46,6 +45,9 @@ namespace ProfileService.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ProfileUser_ID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("User_ID")
                         .HasColumnType("int");
 
                     b.HasKey("Audit_ID");
