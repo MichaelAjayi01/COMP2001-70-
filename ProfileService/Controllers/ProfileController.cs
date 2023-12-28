@@ -38,6 +38,7 @@ public class ProfileController : ControllerBase
     [HttpPost]
     [HttpPost]
 [HttpPost]
+
 public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
 {
     // Validate the profile model as needed
@@ -54,6 +55,7 @@ public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
             _dbContext.InsertUserProfile(
                 profile.First_Name,
                 profile.Last_Name,
+                profile.Email, // Add the email property
                 profile.About,
                 profile.Location,
                 profile.Units,
@@ -73,8 +75,6 @@ public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
 
     return CreatedAtAction(nameof(GetProfile), new { id = profile.User_ID }, profile);
 }
-
-
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProfile(int id, Profile profile)
