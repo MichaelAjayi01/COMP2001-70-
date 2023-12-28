@@ -3,6 +3,7 @@ CREATE PROCEDURE UpdateUserProfile
     @User_ID INT,
     @First_Name NVARCHAR(50),
     @Last_Name NVARCHAR(50),
+    @Email NVARCHAR(100), -- Add parameter for Email
     @About NVARCHAR(MAX),
     @Location NVARCHAR(100),
     @Units NVARCHAR(20),
@@ -18,6 +19,7 @@ BEGIN
     SET
         First_Name = @First_Name,
         Last_Name = @Last_Name,
+        Email = @Email, -- Update the Email column
         About = @About,
         Location = @Location,
         Units = @Units,
