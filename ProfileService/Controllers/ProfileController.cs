@@ -76,33 +76,53 @@ public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
 }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProfile(int id, Profile profile)
+public async Task<IActionResult> UpdateProfile(int id, Profile profile)
+{
+    if (id != profile.User_ID)
     {
-        if (id != profile.User_ID)
-        {
-            return BadRequest();
-        }
+        return BadRequest();
+    }
 
-        _dbContext.Entry(profile).State = EntityState.Modified;
-
-        try
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ProfileExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+    try
+    {
+        // Call the stored procedure to update the user profile
+        await _dbContext.Database.ExecuteSqlRawAsync("EXEC UpdateUserProfile " +
+            "@User_ID, @First_Name, @Last_Name, @Email, @About, @Location, @Units, " +
+            "@Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture",
+            new SqlParameter("@User_ID", profile.User_ID),
+            new SqlParameter("@First_Name", profile.First_Name),
+            new SqlParameter("@Last_Name", profile.Last_Name),
+            new SqlParameter("@Email", profile.Email),
+            new SqlParameter("@About", profile.About),
+            new SqlParameter("@Location", profile.Location),
+            new SqlParameter("@Units", profile.Units),
+            new SqlParameter("@Calorie_Counter_Info", profile.Calorie_Counter_Info),
+            new SqlParameter("@Height", profile.Height),
+            new SqlParameter("@Weight", profile.Weight),
+            new SqlParameter("@Birthday", profile.Birthday),
+            new SqlParameter("@Set_Password", profile.Set_Password),
+            new SqlParameter("@Profile_Picture", profile.Profile_Picture));
 
         return NoContent();
     }
+    catch (DbUpdateConcurrencyException)
+    {
+        if (!ProfileExists(id))
+        {
+            return NotFound();
+        }
+        else
+        {
+            throw;
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the error or take appropriate action
+        // Return a meaningful error response to the client
+        return StatusCode(500, $"Internal Server Error: {ex.Message}");
+    }
+}
 
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteProfile(int id)
