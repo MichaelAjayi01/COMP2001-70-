@@ -35,7 +35,7 @@ CREATE TABLE CW2_UserProfile_CompletedTrails_JT (
 
 -- Creating CW2_COMPLETED_TRAILS table
 CREATE TABLE CW2_COMPLETED_TRAILS (
-    User_Trail_ID INT PRIMARY KEY, -- Reference the surrogate key from the junction table
+    Completed_Trail_ID INT PRIMARY KEY, -- Reference the surrogate key from the junction table
     Completed_Trail_Count INT DEFAULT 0,
     FOREIGN KEY (User_Trail_ID) REFERENCES CW2_UserProfile_CompletedTrails_JT(User_Trail_ID)
 );
