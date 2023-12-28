@@ -75,7 +75,7 @@ public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
     return CreatedAtAction(nameof(GetProfile), new { id = profile.User_ID }, profile);
 }
 
-    [HttpPut("{id}")]
+[HttpPut("{id}")]
 public async Task<IActionResult> UpdateProfile(int id, Profile profile)
 {
     if (id != profile.User_ID)
