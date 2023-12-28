@@ -92,25 +92,23 @@ public class Trail
 }
 
 
-    [Table("CW2_UserProfile_CompletedTrails_JT")]
-    public class UserProfileCompletedTrail
+[Table("CW2_UserProfile_CompletedTrails_JT")]
+public class UserProfileCompletedTrail
 {
     // Properties
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int User_Trail_ID { get; set; }
 
+    // Foreign keys
     public int User_ID { get; set; }
     public int Trail_ID { get; set; }
+    public int CompletedTrail_ID { get; set; }
 
     // Navigation properties
-    [ForeignKey("User_ID")]
-    public Profile User { get; set; }
-
-    [ForeignKey("Trail_ID")]
-    public Trail Trail { get; set; }
-
-    public CompletedTrail CompletedTrail { get; set; }
+    public Profile? User { get; set; } // Nullable
+    public Trail? Trail { get; set; } // Nullable
+    public CompletedTrail? CompletedTrail { get; set; } // Nullable
 
     // Constructor
     public UserProfileCompletedTrail()
@@ -119,36 +117,38 @@ public class Trail
         User_Trail_ID = 0;
         User_ID = 0;
         Trail_ID = 0;
+        CompletedTrail_ID = 0;
 
-        // Initialize navigation properties
-        User = new Profile();
-        Trail = new Trail();
-        CompletedTrail = new CompletedTrail();
+        // Initialize navigation properties as needed
+        User = null;
+        Trail = null;
+        CompletedTrail = null;
     }
 }
+
+
 
 [Table("CW2_COMPLETED_TRAILS")]
 public class CompletedTrail
 {
     // Properties
     [Key]
-    [ForeignKey("UserProfileCompletedTrail")]
-    public int User_Trail_ID { get; set; }
+    public int Completed_Trail_ID { get; set; }
 
     public int Completed_Trail_Count { get; set; }
 
     // Navigation properties
-    public UserProfileCompletedTrail UserProfileCompletedTrail { get; set; }
+    public List<UserProfileCompletedTrail> UserProfileCompletedTrails { get; set; }
 
     // Constructor
     public CompletedTrail()
     {
         // Initialize properties
-        User_Trail_ID = 0;
+        Completed_Trail_ID = 0;
         Completed_Trail_Count = 0;
 
         // Initialize navigation properties
-        UserProfileCompletedTrail = new UserProfileCompletedTrail();
+        UserProfileCompletedTrails = new List<UserProfileCompletedTrail>();
     }
 }
 
@@ -163,7 +163,7 @@ public class AuditLog
     public string Operation_Type { get; set; }
     public DateTime Operation_DateTime { get; set; }
     public string Operation_Details { get; set; }
-    
+
     public AuditLog()
     {
         // Initialize properties

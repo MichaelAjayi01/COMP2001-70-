@@ -136,3 +136,9 @@ C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\obj\Debug\net8.0\ref
 C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\obj\Debug\net8.0\ProfileService.pdb
 C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\obj\Debug\net8.0\ProfileService.genruntimeconfig.cache
 C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\obj\Debug\net8.0\ref\ProfileService.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\System.Data.SqlClient.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\runtimes\win-arm64\native\sni.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\runtimes\win-x64\native\sni.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\runtimes\win-x86\native\sni.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
