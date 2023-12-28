@@ -5,59 +5,64 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProfileService.Models
 {
-    [Table("CW2_USER_PROFILE")]
-    public class Profile
+[Table("CW2_USER_PROFILE")]
+public class Profile
+{
+    // Properties
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int User_ID { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string First_Name { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string Last_Name { get; set; }
+
+    [MaxLength(100)] // Adjust the length as needed
+    public string Email { get; set; } // New property for email
+
+    public string About { get; set; }
+    public string Location { get; set; }
+    public string Units { get; set; }
+    public string Calorie_Counter_Info { get; set; }
+    public float Height { get; set; }
+    public float Weight { get; set; }
+    public DateTime Birthday { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string Set_Password { get; set; }
+
+    public byte[] Profile_Picture { get; set; }
+
+    // Navigation properties
+    public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
+    public List<AuditLog> AuditLogs { get; set; }
+
+    // Constructor
+    public Profile()
     {
-        // Properties
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int User_ID { get; set; }
+        // Initialize non-nullable properties here
+        First_Name = "";
+        Last_Name = "";
+        Email = ""; // Add this line for the email property
+        About = "";
+        Location = "";
+        Units = "";
+        Calorie_Counter_Info = "";
+        Set_Password = "";
+        Profile_Picture = Array.Empty<byte>(); // You might want to provide a default value or handle it differently
+        Birthday = DateTime.MinValue; // Provide a default value for DateTime
 
-        [Required]
-        [MaxLength(50)]
-        public string First_Name { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Last_Name { get; set; }
-
-        public string About { get; set; }
-        public string Location { get; set; }
-        public string Units { get; set; }
-        public string Calorie_Counter_Info { get; set; }
-        public float Height { get; set; }
-        public float Weight { get; set; }
-        public DateTime Birthday { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Set_Password { get; set; }
-
-        public byte[] Profile_Picture { get; set; }
-
-        // Navigation properties
-        public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
-        public List<AuditLog> AuditLogs { get; set; }
-
-        // Constructor
-        public Profile()
-        {
-            // Initialize non-nullable properties here
-            First_Name = "";
-            Last_Name = "";
-            About = "";
-            Location = "";
-            Units = "";
-            Calorie_Counter_Info = "";
-            Set_Password = "";
-            Profile_Picture = Array.Empty<byte>(); // You might want to provide a default value or handle it differently
-            Birthday = DateTime.MinValue; // Provide a default value for DateTime
-
-            // Initialize navigation properties
-            CompletedTrails = new List<UserProfileCompletedTrail>();
-            AuditLogs = new List<AuditLog>();
-        }
+        // Initialize navigation properties
+        CompletedTrails = new List<UserProfileCompletedTrail>();
+        AuditLogs = new List<AuditLog>();
     }
+}
+
 
     [Table("CW2_Trails")]
 public class Trail
