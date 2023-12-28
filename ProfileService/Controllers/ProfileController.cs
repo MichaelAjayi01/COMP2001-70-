@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProfileService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -35,10 +36,8 @@ public class ProfileController : ControllerBase
         return profile;
     }
 
-    [HttpPost]
-    [HttpPost]
+    
 [HttpPost]
-
 public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
 {
     // Validate the profile model as needed
@@ -105,23 +104,27 @@ public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProfile(int id)
+[HttpDelete("{id}")]
+public async Task<IActionResult> DeleteProfile(int id)
+{
+    // Call the stored procedure to delete the user profile
+    var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
+
+    // Check if any rows were affected (profile deleted)
+    if (rowsAffected > 0)
     {
-        var profile = await _dbContext.Profiles.FindAsync(id);
-        if (profile == null)
-        {
-            return NotFound();
-        }
-
-        _dbContext.Profiles.Remove(profile);
-        await _dbContext.SaveChangesAsync();
-
         return NoContent();
     }
-
-    private bool ProfileExists(int id)
+    else
     {
-        return _dbContext.Profiles.Any(e => e.User_ID == id);
+        // No rows affected means the profile was not found
+        return NotFound();
     }
+}
+
+private bool ProfileExists(int id)
+{
+    // Check if the profile exists in the local DbSet (no database query)
+    return _dbContext.Profiles.Local.Any(e => e.User_ID == id);
+}
 }
