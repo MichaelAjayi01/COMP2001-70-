@@ -37,7 +37,7 @@ public class CreateCompletedTrailDTO
         // Initialize other properties
     }
 
-    public string Trail_Name { get; set; }
+    public string? Trail_Name { get; set; }
     // Add other necessary properties for completed trail
 }
 
@@ -50,3 +50,10 @@ public class CreateProfileWrapperDTO
         profileDTO = new CreateProfileDTO();
     }
 }
+
+public class UpdateProfileDTO
+{
+    public int User_ID { get; set; }
+    public CreateProfileDTO? ProfileDTO { get; set; }
+}
+

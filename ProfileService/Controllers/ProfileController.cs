@@ -124,17 +124,51 @@ public async Task<ActionResult<Profile>> CreateProfile(
 
 
 [HttpPut("{id}")]
-public async Task<IActionResult> UpdateProfile(int id, Profile profile)
+public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileDTO updateDTO)
 {
-    if (id != profile.User_ID)
+    if (id != updateDTO.User_ID)
     {
         return BadRequest();
     }
 
     try
     {
-        // Call the stored procedure to update the user profile
-        await _dbContext.Database.ExecuteSqlRawAsync("EXEC UpdateUserProfile " +
+            // Access the profileDTO from the wrapper
+
+            CreateProfileDTO? profileDTO = updateDTO.ProfileDTO;
+
+
+            // Map the DTO to the actual profile entity
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+            var profile = new Profile
+        {
+            User_ID = updateDTO.User_ID,
+            First_Name = profileDTO.First_Name,
+            Last_Name = profileDTO.Last_Name,
+            Email = profileDTO.Email,
+            About = profileDTO.About,
+            Location = profileDTO.Location,
+            Units = profileDTO.Units,
+            Calorie_Counter_Info = profileDTO.Calorie_Counter_Info,
+            Height = profileDTO.Height,
+            Weight = profileDTO.Weight,
+            Birthday = profileDTO.Birthday,
+            Set_Password = profileDTO.Set_Password,
+            Profile_Picture = profileDTO.Profile_Picture ?? new byte[0], // Handle null case, replace with an appropriate default value
+            CompletedTrails = profileDTO.CompletedTrails?.Select(ct => ct != null ? new UserProfileCompletedTrail
+            {
+                // Map properties accordingly
+            } : null).ToList(),
+
+        };
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            // Call the stored procedure to update the user profile
+            await _dbContext.Database.ExecuteSqlRawAsync("EXEC UpdateUserProfile " +
             "@User_ID, @First_Name, @Last_Name, @Email, @About, @Location, @Units, " +
             "@Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture",
             new SqlParameter("@User_ID", profile.User_ID),
@@ -171,6 +205,7 @@ public async Task<IActionResult> UpdateProfile(int id, Profile profile)
         return StatusCode(500, $"Internal Server Error: {ex.Message}");
     }
 }
+
 
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteProfile(int id)
