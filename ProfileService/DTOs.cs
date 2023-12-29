@@ -25,7 +25,7 @@ public class CreateProfileDTO
     public float Weight { get; set; }
     public DateTime Birthday { get; set; }
     public string Set_Password { get; set; }
-    public byte[] Profile_Picture { get; set; } // Change the type back to byte[]
+    public byte[]? Profile_Picture { get; set; }
     public List<CreateCompletedTrailDTO> CompletedTrails { get; set; }
 }
 

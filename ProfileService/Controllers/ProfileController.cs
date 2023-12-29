@@ -49,77 +49,79 @@ public class ProfileController : ControllerBase
 [ProducesResponseType(typeof(IDictionary<string, string[]>), 400)]
 [ProducesResponseType(500)]
 [SwaggerRequestExample(typeof(CreateProfileWrapperDTO), typeof(CreateProfileExample))]
-    public async Task<ActionResult<Profile>> CreateProfile(
-        [FromBody] CreateProfileWrapperDTO wrapperDTO)
+public async Task<ActionResult<Profile>> CreateProfile(
+    [FromBody] CreateProfileWrapperDTO wrapperDTO)
+{
+    // Validate the profile model as needed
+    if (!ModelState.IsValid)
     {
-        // Validate the profile model as needed
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        return BadRequest(ModelState);
+    }
 
-        // Access the profileDTO from the wrapper
-        CreateProfileDTO profileDTO = wrapperDTO.profileDTO;
+    // Access the profileDTO from the wrapper
+    CreateProfileDTO profileDTO = wrapperDTO.profileDTO;
 
-        // Map the DTO to the actual profile entity
+    // Map the DTO to the actual profile entity
 #pragma warning disable CS8601 // Possible null reference assignment.
-        var profile = new Profile
+    var profile = new Profile
+    {
+        First_Name = profileDTO.First_Name,
+        Last_Name = profileDTO.Last_Name,
+        Email = profileDTO.Email,
+        About = profileDTO.About,
+        Location = profileDTO.Location,
+        Units = profileDTO.Units,
+        Calorie_Counter_Info = profileDTO.Calorie_Counter_Info,
+        Height = profileDTO.Height,
+        Weight = profileDTO.Weight,
+        Birthday = profileDTO.Birthday,
+        Set_Password = profileDTO.Set_Password,
+        Profile_Picture = profileDTO.Profile_Picture,
+        CompletedTrails = profileDTO.CompletedTrails?.Select(ct => new UserProfileCompletedTrail
         {
-            First_Name = profileDTO.First_Name,
-            Last_Name = profileDTO.Last_Name,
-            Email = profileDTO.Email,
-            About = profileDTO.About,
-            Location = profileDTO.Location,
-            Units = profileDTO.Units,
-            Calorie_Counter_Info = profileDTO.Calorie_Counter_Info,
-            Height = profileDTO.Height,
-            Weight = profileDTO.Weight,
-            Birthday = profileDTO.Birthday,
-            Set_Password = profileDTO.Set_Password,
-            Profile_Picture = profileDTO.Profile_Picture,
-            CompletedTrails = profileDTO.CompletedTrails?.Select(ct => new UserProfileCompletedTrail
+            Trail = new Trail
             {
-                Trail = new Trail
-                {
-                    Trail_Name = ct.Trail_Name,
-                    // Add other necessary properties for trail
-                }
-                // Add other necessary properties for completed trail
-            }).ToList()
-        };
+                Trail_Name = ct.Trail_Name,
+                // Add other necessary properties for trail
+            }
+            // Add other necessary properties for completed trail
+        }).ToList()
+    };
 #pragma warning restore CS8601 // Possible null reference assignment.
 
-        // Call the stored procedure to insert the user profile
-        await Task.Run(() => // Use Task.Run to simulate an asynchronous operation
-        {
-            // Ensure that null or empty lists are handled properly
-            var allTrailNames = string.Join(", ", profile.CompletedTrails?.Select(ct => ct.Trail?.Trail_Name ?? "") ?? Enumerable.Empty<string>());
-            var allTrailDetails = string.Join(", ", profile.CompletedTrails?.Select(ct => ct.Trail?.List_of_Trails ?? "") ?? Enumerable.Empty<string>());
+    // Call the stored procedure to insert the user profile
+    await Task.Run(() => // Use Task.Run to simulate an asynchronous operation
+    {
+        // Ensure that null or empty lists are handled properly
+        var allTrailNames = string.Join(", ", profile.CompletedTrails?.Select(ct => ct.Trail?.Trail_Name ?? "") ?? Enumerable.Empty<string>());
+        var allTrailDetails = string.Join(", ", profile.CompletedTrails?.Select(ct => ct.Trail?.List_of_Trails ?? "") ?? Enumerable.Empty<string>());
 
 #pragma warning disable CS8604 // Possible null reference argument.
-            _dbContext.InsertUserProfile(
-                profile.First_Name,
-                profile.Last_Name,
-                profile.Email,
-                profile.About,
-                profile.Location,
-                profile.Units,
-                profile.Calorie_Counter_Info,
-                profile.Height,
-                profile.Weight,
-                profile.Birthday,
-                profile.Set_Password,
-                profile.Profile_Picture,
-                allTrailNames,
-                allTrailDetails);
+        _dbContext.InsertUserProfile(
+            profile.First_Name,
+            profile.Last_Name,
+            profile.Email,
+            profile.About,
+            profile.Location,
+            profile.Units,
+            profile.Calorie_Counter_Info,
+            profile.Height,
+            profile.Weight,
+            profile.Birthday,
+            profile.Set_Password,
+            profile.Profile_Picture,
+            allTrailNames,
+            allTrailDetails);
 #pragma warning restore CS8604 // Possible null reference argument.
-        });
+    });
 
-        // The profile has been added through the stored procedure, so no need to use _dbContext.Profiles.Add(profile);
-        // If you need to fetch the newly created profile from the database, you can do so here.
+    // The profile has been added through the stored procedure, so no need to use _dbContext.Profiles.Add(profile);
+    // If you need to fetch the newly created profile from the database, you can do so here.
 
-        return CreatedAtAction(nameof(GetProfile), new { id = profile.User_ID }, profile);
-    }
+    return CreatedAtAction(nameof(GetProfile), new { id = profile.User_ID }, profile);
+}
+
+
 
 [HttpPut("{id}")]
 public async Task<IActionResult> UpdateProfile(int id, Profile profile)
