@@ -19,7 +19,7 @@ public class Startup
     {
         // Configure DbContext with the specified connection string
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("Server=dist-6-505.uopnet.plymouth.ac.uk;Database=COMP2001_MAjayi;User=MAjayi;Password=OnoE922*;TrustServerCertificate=true")));
 
         // Other service configurations...
 
