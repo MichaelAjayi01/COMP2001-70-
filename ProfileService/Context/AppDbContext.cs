@@ -20,7 +20,7 @@ namespace ProfileService.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Remove this method as it's not needed when using dependency injection
-            // optionsBuilder.UseSqlServer("Server=dist-6-505.uopnet.plymouth.ac.uk;Database=COMP2001_MAjayi;User=MAjayi;Password=OnoE922*;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=dist-6-505.uopnet.plymouth.ac.uk;Database=COMP2001_MAjayi;User=MAjayi;Password=OnoE922*;TrustServerCertificate=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
