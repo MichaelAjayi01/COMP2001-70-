@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace ProfileService.Models
 {
+
+
 [Table("CW2_USER_PROFILE")]
 public class Profile
 {
@@ -36,7 +39,7 @@ public class Profile
     [MaxLength(50)]
     public string Set_Password { get; set; }
 
-    public byte[] Profile_Picture { get; set; }
+    public byte[] Profile_Picture { get; set; } // Change the type back to byte[]
 
     // Navigation properties
     public List<UserProfileCompletedTrail> CompletedTrails { get; set; }
@@ -54,7 +57,7 @@ public class Profile
         Units = "";
         Calorie_Counter_Info = "";
         Set_Password = "";
-        Profile_Picture = Array.Empty<byte>(); // You might want to provide a default value or handle it differently
+        Profile_Picture = Array.Empty<byte>(); // Provide a default value for byte[]
         Birthday = DateTime.MinValue; // Provide a default value for DateTime
 
         // Initialize navigation properties
@@ -62,6 +65,7 @@ public class Profile
         AuditLogs = new List<AuditLog>();
     }
 }
+
 
 
     [Table("CW2_Trails")]
