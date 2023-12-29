@@ -12,9 +12,15 @@ namespace ProfileService.Models
         public DbSet<CompletedTrail> CompletedTrails { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
+        // Add this constructor
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=dist-6-505.uopnet.plymouth.ac.uk;Database=COMP2001_MAjayi;User=MAjayi;Password=OnoE922*;TrustServerCertificate=true");
+            // Remove this method as it's not needed when using dependency injection
+            // optionsBuilder.UseSqlServer("Server=dist-6-505.uopnet.plymouth.ac.uk;Database=COMP2001_MAjayi;User=MAjayi;Password=OnoE922*;TrustServerCertificate=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,39 +45,38 @@ namespace ProfileService.Models
         }
 
         public void InsertUserProfile(
-    string firstName,
-    string lastName,
-    string email,
-    string about,
-    string location,
-    string units,
-    string calorieCounterInfo,
-    float height,
-    float weight,
-    DateTime birthday,
-    string setPassword,
-    byte[] profilePicture,
-    string trailName,
-    string listOfTrails)
-{
-    Database.ExecuteSqlRaw("EXEC InsertUserProfile " +
-        "@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, " +
-        "@Birthday, @Set_Password, @Profile_Picture, @Trail_Name, @List_of_Trails",
-        new SqlParameter("@First_Name", firstName),
-        new SqlParameter("@Last_Name", lastName),
-        new SqlParameter("@Email", email),
-        new SqlParameter("@About", about),
-        new SqlParameter("@Location", location),
-        new SqlParameter("@Units", units),
-        new SqlParameter("@Calorie_Counter_Info", calorieCounterInfo),
-        new SqlParameter("@Height", height),
-        new SqlParameter("@Weight", weight),
-        new SqlParameter("@Birthday", birthday),
-        new SqlParameter("@Set_Password", setPassword),
-        new SqlParameter("@Profile_Picture", profilePicture),
-        new SqlParameter("@Trail_Name", trailName),
-        new SqlParameter("@List_of_Trails", listOfTrails));
-}
-
+            string firstName,
+            string lastName,
+            string email,
+            string about,
+            string location,
+            string units,
+            string calorieCounterInfo,
+            float height,
+            float weight,
+            DateTime birthday,
+            string setPassword,
+            byte[] profilePicture,
+            string trailName,
+            string listOfTrails)
+        {
+            Database.ExecuteSqlRaw("EXEC InsertUserProfile " +
+                "@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, " +
+                "@Birthday, @Set_Password, @Profile_Picture, @Trail_Name, @List_of_Trails",
+                new SqlParameter("@First_Name", firstName),
+                new SqlParameter("@Last_Name", lastName),
+                new SqlParameter("@Email", email),
+                new SqlParameter("@About", about),
+                new SqlParameter("@Location", location),
+                new SqlParameter("@Units", units),
+                new SqlParameter("@Calorie_Counter_Info", calorieCounterInfo),
+                new SqlParameter("@Height", height),
+                new SqlParameter("@Weight", weight),
+                new SqlParameter("@Birthday", birthday),
+                new SqlParameter("@Set_Password", setPassword),
+                new SqlParameter("@Profile_Picture", profilePicture),
+                new SqlParameter("@Trail_Name", trailName),
+                new SqlParameter("@List_of_Trails", listOfTrails));
+        }
     }
 }
