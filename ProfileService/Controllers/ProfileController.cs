@@ -10,7 +10,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
 
 
 
@@ -52,25 +51,31 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 
 
 // Add a new route for authentication
-[HttpPost("auth/api/users")] // Update the route to match the authentication API URL
+[HttpPost("auth/api/users")]
 [SwaggerOperation("Authenticate a user")]
-[ProducesResponseType(typeof(int), 200)] // Assuming user_ID is of type int, adjust as needed
-[ProducesResponseType(typeof(IEnumerable<string>), 200)] // Adjust the response type as needed
+[ProducesResponseType(typeof(string), 200)] // Assuming you return a JWT token
+[ProducesResponseType(typeof(IEnumerable<string>), 200)]
 [ProducesResponseType(500)]
 [SwaggerRequestExample(typeof(AuthenticateUserDTO), typeof(AuthenticateUserExample))]
 public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO authenticateUserDTO)
 {
     try
     {
-        // Perform authentication logic
-        var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Email == authenticateUserDTO.Email && u.Set_Password == authenticateUserDTO.Set_Password);
-        
+        var user = await _dbContext.Profiles.FirstOrDefaultAsync(u =>
+            u.Email == authenticateUserDTO.Email && u.Set_Password == authenticateUserDTO.Set_Password);
+
         if (user != null)
         {
             // Authentication successful
-            storedUserId = user.User_ID;
-            Console.WriteLine($"Stored user ID in authenticator now: {storedUserId}");
-            return Ok(new { user_ID = user.User_ID });
+            var token = GenerateJwtToken(user.User_ID);
+            string revealToken = token; // Replace with your actual JWT token
+            JwtUtils.PrintTokenClaims(revealToken);
+            // Include user information in the response
+            return Ok(new
+            {
+                token,
+                user.Set_Password,
+            });
         }
         else
         {
@@ -86,10 +91,11 @@ public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO 
     }
 }
 
+
+
 private string GenerateJwtToken(int userId)
 {
-    // Ensure that the configuration value is not null
-    var secretKey = _configuration.GetValue<string>("JwtSettings:SecretKey");
+    var secretKey = _configuration["JwtSettings:SecretKey"];
 
     if (secretKey != null)
     {
@@ -97,10 +103,11 @@ private string GenerateJwtToken(int userId)
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userId.ToString()) }),
+            Subject = new ClaimsIdentity(new[] { new Claim("unique_name", userId.ToString()) }),
             Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
+        
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
@@ -110,6 +117,7 @@ private string GenerateJwtToken(int userId)
         throw new InvalidOperationException("JWT secret key is null.");
     }
 }
+
 
 
 
@@ -289,30 +297,72 @@ public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileD
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteProfile(int id)
 {
-    Console.WriteLine(storedUserId);
-    Console.WriteLine(adminId);
-    if(storedUserId == adminId)
+    try
     {
-        // Call the stored procedure to delete the user profile
-        var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
-
-        // Check if any rows were affected (profile deleted)
-        if (rowsAffected > 0)
+            // Get the current user's ID from the claims
+            var userIdClaim = User.FindFirst("unique_name");
+        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out var currentUserId))
         {
-            return NoContent();
+            // Check if the current user has the authority to delete the profile
+            Console.WriteLine($"currentUserId: {currentUserId}");
+
+            // Check the token's validity based on nbf and exp
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            var nbfClaim = User.FindFirst("nbf");
+            var expClaim = User.FindFirst("exp");
+
+            if (nbfClaim != null && expClaim != null)
+            {
+                var nbf = long.Parse(nbfClaim.Value);
+                var exp = long.Parse(expClaim.Value);
+
+                if (now < nbf || now >= exp)
+                {
+                    // Token is not yet valid or has expired
+                    Console.WriteLine("Token is not yet valid or has expired");
+                    return Unauthorized(); // 401 Unauthorized
+                }
+            }
+
+            if (currentUserId == adminId)
+            {
+                // Call the stored procedure to delete the user profile
+                var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
+
+                // Check if any rows were affected (profile deleted)
+                if (rowsAffected > 0)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    // No rows affected means the profile was not found
+                    return NotFound();
+                }
+            }
+            else
+            {
+                // Unauthorized access
+                return Forbid(); // 403 Forbidden
+            }
         }
         else
         {
-            // No rows affected means the profile was not found
-            return NotFound();
+            // User ID claim not found or Invalid
+            Console.WriteLine("Userclaim was null");
+            return Unauthorized(); // 401 Unauthorized
         }
     }
-    else
+    catch (Exception ex)
     {
-        // Unauthorized access
-        return Unauthorized();
+        // Log the error or take appropriate action
+        // Return a meaningful error response to the client
+        return StatusCode(500, $"Internal Server Error: {ex.Message}");
     }
 }
+
+
 
 private bool ProfileExists(int id)
 {

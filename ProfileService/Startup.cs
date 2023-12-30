@@ -81,8 +81,11 @@ public class Startup
         app.UseStaticFiles();
 
         app.UseRouting();
-
+    
         app.UseAuthentication(); // Adds the authentication middleware to the pipeline
+        app.UseAuthorization();  // Adds the authorization middleware to the pipeline
+
+        
 
         app.UseEndpoints(endpoints =>
         {
