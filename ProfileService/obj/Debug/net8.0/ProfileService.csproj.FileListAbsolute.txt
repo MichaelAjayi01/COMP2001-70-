@@ -146,3 +146,4 @@ C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\Scr
 C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll
 C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
 C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+C:\Users\44783\Documents\GitHub\COMP2001-70-\ProfileService\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

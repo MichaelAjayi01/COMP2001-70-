@@ -29,34 +29,36 @@ public class Startup
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
         });
 
-    // Add JWT authentication
-    var key = Encoding.ASCII.GetBytes(Configuration["JwtSettings:SecretKey"]);
-    services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
+        // Add JWT authentication
+        var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
+
+        if (secretKey != null)
         {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
-
+            var key = Encoding.ASCII.GetBytes(secretKey);
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+        }
+        else
+        {
+            // Handle the case where the secret key is null (throw an exception, provide a default, etc.)
+            throw new InvalidOperationException("JWT secret key is null.");
+        }
     }
-
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-{
-    // Other configurations...
-
-    app.UseAuthentication(); // Adds the authentication middleware to the pipeline
-}
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
@@ -79,6 +81,8 @@ public class Startup
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseAuthentication(); // Adds the authentication middleware to the pipeline
 
         app.UseEndpoints(endpoints =>
         {
