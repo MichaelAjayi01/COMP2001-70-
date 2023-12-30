@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileService.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;

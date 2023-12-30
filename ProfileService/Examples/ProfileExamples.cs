@@ -1,9 +1,6 @@
 // Assuming the folder structure is like this:
 // YourProjectRoot/Examples/CreateProfileExample.cs
 
-using System;
-using System.Collections.Generic;
-using ProfileService.Models; // Adjust the namespace based on your project structure
 using Swashbuckle.AspNetCore.Filters;
 
 namespace ProfileExamples.Examples
