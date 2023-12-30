@@ -6,7 +6,11 @@ using Microsoft.Data.SqlClient;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using ProfileExamples.Examples;
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 
 
 
@@ -18,10 +22,14 @@ public class ProfileController : ControllerBase
     private int adminId = 12;
     private readonly AppDbContext _dbContext;
 
-    public ProfileController(AppDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly IConfiguration _configuration;
+
+public ProfileController(AppDbContext dbContext, IConfiguration configuration)
+{
+    _dbContext = dbContext;
+    _configuration = configuration; // Corrected from 'configuration' to '_configuration'
+}
+
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
@@ -75,6 +83,31 @@ public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO 
         // Log the error or take appropriate action
         // Return a meaningful error response to the client
         return StatusCode(500, $"Internal Server Error: {ex.Message}");
+    }
+}
+
+private string GenerateJwtToken(int userId)
+{
+    // Ensure that the configuration value is not null
+    var secretKey = _configuration.GetValue<string>("JwtSettings:SecretKey");
+
+    if (secretKey != null)
+    {
+        var key = Encoding.ASCII.GetBytes(secretKey);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userId.ToString()) }),
+            Expires = DateTime.UtcNow.AddHours(1),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+    else
+    {
+        // Handle the case where the secret key is null (throw an exception, provide a default, etc.)
+        throw new InvalidOperationException("JWT secret key is null.");
     }
 }
 
