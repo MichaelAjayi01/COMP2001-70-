@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using ProfileService.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 public class Startup
 {
@@ -30,7 +28,35 @@ public class Startup
         {
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
         });
+
+    // Add JWT authentication
+    var key = Encoding.ASCII.GetBytes(Configuration["JwtSettings:SecretKey"]);
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
     }
+
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    // Other configurations...
+
+    app.UseAuthentication(); // Adds the authentication middleware to the pipeline
+}
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {

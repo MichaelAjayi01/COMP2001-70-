@@ -6,12 +6,16 @@ using Microsoft.Data.SqlClient;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using ProfileExamples.Examples;
+using Microsoft.Extensions.Configuration;
+
 
 
 [Route("api/[controller]")]
 [ApiController]
 public class ProfileController : ControllerBase
 {
+    private int storedUserId = -1;
+    private int adminId = 12;
     private readonly AppDbContext _dbContext;
 
     public ProfileController(AppDbContext dbContext)
@@ -56,6 +60,8 @@ public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO 
         if (user != null)
         {
             // Authentication successful
+            storedUserId = user.User_ID;
+            Console.WriteLine($"Stored user ID in authenticator now: {storedUserId}");
             return Ok(new { user_ID = user.User_ID });
         }
         else
@@ -147,10 +153,18 @@ public async Task<ActionResult<Profile>> CreateProfile(
 #pragma warning restore CS8604 // Possible null reference argument.
     });
 
-    // The profile has been added through the stored procedure, so no need to use _dbContext.Profiles.Add(profile);
-    // If you need to fetch the newly created profile from the database, you can do so here.
+    var createdProfile = await _dbContext.Profiles
+        .FirstOrDefaultAsync(p => p.Email == profileDTO.Email && p.Set_Password == profileDTO.Set_Password);
 
-    return CreatedAtAction(nameof(GetProfile), new { id = profile.User_ID }, profile);
+    if (createdProfile != null)
+    {
+        // Store the User_ID in the storedUserId variable
+        storedUserId = createdProfile.User_ID;
+
+        // Return the created profile with a CreatedAtAction result
+        return CreatedAtAction(nameof(GetProfile), new { id = createdProfile.User_ID }, createdProfile);
+    }
+    return StatusCode(500, "Internal Server Error: Unable to retrieve the created profile");
 }
 
 
@@ -242,18 +256,28 @@ public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileD
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteProfile(int id)
 {
-    // Call the stored procedure to delete the user profile
-    var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
-
-    // Check if any rows were affected (profile deleted)
-    if (rowsAffected > 0)
+    Console.WriteLine(storedUserId);
+    Console.WriteLine(adminId);
+    if(storedUserId == adminId)
     {
-        return NoContent();
+        // Call the stored procedure to delete the user profile
+        var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
+
+        // Check if any rows were affected (profile deleted)
+        if (rowsAffected > 0)
+        {
+            return NoContent();
+        }
+        else
+        {
+            // No rows affected means the profile was not found
+            return NotFound();
+        }
     }
     else
     {
-        // No rows affected means the profile was not found
-        return NotFound();
+        // Unauthorized access
+        return Unauthorized();
     }
 }
 
