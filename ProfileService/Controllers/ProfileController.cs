@@ -39,6 +39,40 @@ public class ProfileController : ControllerBase
     }
 
 
+// Add a new route for authentication
+[HttpPost("auth/api/users")] // Update the route to match the authentication API URL
+[SwaggerOperation("Authenticate a user")]
+[ProducesResponseType(typeof(int), 200)] // Assuming user_ID is of type int, adjust as needed
+[ProducesResponseType(typeof(IEnumerable<string>), 200)] // Adjust the response type as needed
+[ProducesResponseType(500)]
+[SwaggerRequestExample(typeof(AuthenticateUserDTO), typeof(AuthenticateUserExample))]
+public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO authenticateUserDTO)
+{
+    try
+    {
+        // Perform authentication logic
+        var user = await _dbContext.Profiles.FirstOrDefaultAsync(u => u.Email == authenticateUserDTO.Email && u.Set_Password == authenticateUserDTO.Set_Password);
+        
+        if (user != null)
+        {
+            // Authentication successful
+            return Ok(new { user_ID = user.User_ID });
+        }
+        else
+        {
+            // Authentication failed
+            return Ok(new[] { "Verified", "False" });
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the error or take appropriate action
+        // Return a meaningful error response to the client
+        return StatusCode(500, $"Internal Server Error: {ex.Message}");
+    }
+}
+
+
 
 [HttpPost]
 [SwaggerOperation("Create a new profile")]
