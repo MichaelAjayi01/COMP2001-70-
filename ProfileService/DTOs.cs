@@ -1,4 +1,7 @@
 // DTOs.cs
+using System.ComponentModel.DataAnnotations;
+
+
 public class CreateProfileDTO
 {
     public CreateProfileDTO()
@@ -57,3 +60,12 @@ public class UpdateProfileDTO
     public CreateProfileDTO? ProfileDTO { get; set; }
 }
 
+public class AuthenticateUserDTO
+{
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Invalid email address")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required")]
+    public string Set_Password { get; set; } = string.Empty;
+}
