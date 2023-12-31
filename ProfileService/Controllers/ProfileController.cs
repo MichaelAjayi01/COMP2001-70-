@@ -121,6 +121,7 @@ private string GenerateJwtToken(int userId)
 
 
 
+
 [HttpPost]
 [SwaggerOperation("Create a new profile")]
 [SwaggerRequestExample(typeof(CreateProfileWrapperDTO), typeof(CreateProfileExample))]
@@ -299,9 +300,10 @@ public async Task<IActionResult> DeleteProfile(int id)
 {
     try
     {
-            // Get the current user's ID from the claims
-            var userIdClaim = User.FindFirst("unique_name");
-        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out var currentUserId))
+        // unable to get userid naturally for some reason so will work around it.
+        var userIdClaim = JwtUtils.user_id_value;
+
+        if (userIdClaim != null && int.TryParse(userIdClaim, out var currentUserId))
         {
             // Check if the current user has the authority to delete the profile
             Console.WriteLine($"currentUserId: {currentUserId}");
