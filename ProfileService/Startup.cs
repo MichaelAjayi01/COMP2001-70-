@@ -13,33 +13,29 @@ public class Startup
         Configuration = configuration;
     }
 
-    public void ConfigureServices(IServiceCollection services)
+public void ConfigureServices(IServiceCollection services)
+{
+    // Configure DbContext with the specified connection string
+    services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+    // Other service configurations...
+
+    services.AddControllers();
+
+    // Add Swagger
+    services.AddSwaggerGen(c =>
     {
-        // Configure DbContext with the specified connection string
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
+    });
 
-        // Other service configurations...
+    // Add JWT authentication
+    var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
 
-        services.AddControllers();
-
-        // Add Swagger
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
-        });
-
-        // Add JWT authentication
-        var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
-
-        if (secretKey != null)
-        {
-            var key = Encoding.ASCII.GetBytes(secretKey);
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+    if (secretKey != null)
+    {
+        var key = Encoding.ASCII.GetBytes(secretKey);
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // Specify the default authentication scheme
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
@@ -52,13 +48,19 @@ public class Startup
                     ValidateAudience = false
                 };
             });
-        }
-        else
-        {
-            // Handle the case where the secret key is null (throw an exception, provide a default, etc.)
-            throw new InvalidOperationException("JWT secret key is null.");
-        }
+
+        
     }
+    else
+    {
+        // Handle the case where the secret key is null (throw an exception, provide a default, etc.)
+        throw new InvalidOperationException("JWT secret key is null.");
+    }
+
+    // Add authorization globally
+    services.AddAuthorization();
+}
+
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {

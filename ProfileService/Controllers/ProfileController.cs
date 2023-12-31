@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 
@@ -67,7 +68,7 @@ public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO 
         {
             // Authentication successful
             var token = GenerateJwtToken(user.User_ID);
-            string revealToken = token; // Replace with your actual JWT token
+            string revealToken = token;
             JwtUtils.PrintTokenClaims(revealToken);
             // Include user information in the response
             return Ok(new
@@ -199,8 +200,10 @@ public async Task<ActionResult<Profile>> CreateProfile(
 
     if (createdProfile != null)
     {
-        // Store the User_ID in the storedUserId variable
         JwtUtils.user_id_value = Convert.ToString(createdProfile.User_ID);
+        var newToken = GenerateJwtToken(createdProfile.User_ID);
+        string revealToken = newToken;
+        JwtUtils.PrintTokenClaims(revealToken);
 
         Console.WriteLine(JwtUtils.user_id_value);
 
@@ -306,9 +309,6 @@ public async Task<IActionResult> DeleteProfile(int id)
 
         if (userIdClaim != null && int.TryParse(userIdClaim, out var currentUserId))
         {
-            // Check if the current user has the authority to delete the profile
-            Console.WriteLine($"currentUserId: {currentUserId}");
-
             // Check the token's validity based on nbf and exp
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
@@ -328,7 +328,7 @@ public async Task<IActionResult> DeleteProfile(int id)
                 }
             }
 
-            if (currentUserId == adminId)
+            if (currentUserId == adminId)//edit this to account for a user deleting their own profile
             {
                 // Call the stored procedure to delete the user profile
                 var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
@@ -347,7 +347,7 @@ public async Task<IActionResult> DeleteProfile(int id)
             else
             {
                 // Unauthorized access
-                return Forbid(); // 403 Forbidden
+                return Unauthorized();
             }
         }
         else

@@ -20,7 +20,7 @@ public static class JwtUtils
 
                 if (firstClaim != null)
                 {
-                    Console.WriteLine($"{firstClaim.Type}: {firstClaim.Value}");
+                    Console.WriteLine($"{firstClaim.Type}: {firstClaim.Value}");//delete debugging
                     user_id_value = firstClaim.Value; // Accessed in a static method
                 }
                 else
