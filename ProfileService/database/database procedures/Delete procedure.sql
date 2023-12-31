@@ -1,26 +1,71 @@
--- Delete procedure for CW2_USER_PROFILE
 CREATE PROCEDURE DeleteUserProfile
     @User_ID INT
 AS
 BEGIN
-    -- Begin a transaction
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Declare a table variable to store the deleted user ID
-        DECLARE @DeletedUsers TABLE (DeletedUserID INT);
+        -- Declare table variables to store the deleted IDs
+        DECLARE @DeletedTrails TABLE (DeletedTrailID INT);
 
         -- Check if the user profile exists
         IF EXISTS (SELECT 1 FROM CW2_USER_PROFILE WHERE User_ID = @User_ID)
         BEGIN
-            -- Delete from CW2_USER_PROFILE and store the deleted user ID
-            DELETE FROM CW2_USER_PROFILE 
-            OUTPUT DELETED.User_ID INTO @DeletedUsers
+            -- Delete from CW2_UserProfile_CompletedTrails_JT and store the deleted trail IDs
+            DELETE FROM CW2_UserProfile_CompletedTrails_JT
+            OUTPUT DELETED.Trail_ID INTO @DeletedTrails
             WHERE User_ID = @User_ID;
 
-            -- Insert into CW2_Audit_Log using the stored deleted user ID
+            -- Delete from CW2_Completed_Trails using the stored deleted trail IDs
+            DELETE FROM CW2_COMPLETED_TRAILS
+            WHERE Completed_Trail_ID IN (SELECT DeletedTrailID FROM @DeletedTrails);
+
+            -- Delete from CW2_Trails using the stored deleted trail IDs
+            DELETE FROM CW2_Trails
+            WHERE Trail_ID IN (SELECT DeletedTrailID FROM @DeletedTrails);
+
+            -- Archive the user profile before deletion
+            INSERT INTO CW2_Archived_Users (
+                User_ID, 
+                First_Name, 
+                Last_Name, 
+                Email, 
+                About, 
+                Location, 
+                Units, 
+                Calorie_Counter_Info, 
+                Height, 
+                Weight, 
+                Birthday, 
+                Set_Password, 
+                Profile_Picture, 
+                ArchiveDateTime
+            )
+            SELECT 
+                User_ID, 
+                First_Name, 
+                Last_Name, 
+                Email, 
+                About, 
+                Location, 
+                Units, 
+                Calorie_Counter_Info, 
+                Height, 
+                Weight, 
+                Birthday, 
+                Set_Password, 
+                Profile_Picture, 
+                GETDATE() -- Use current datetime for ArchiveDateTime
+            FROM CW2_USER_PROFILE
+            WHERE User_ID = @User_ID;
+
+            -- Log the archiving in the audit table
             INSERT INTO CW2_Audit_Log (User_ID, Operation_Type, Operation_DateTime, Operation_Details)
-            SELECT DeletedUserID, 'DELETE', GETDATE(), 'User profile deleted.' FROM @DeletedUsers;
+            VALUES (@User_ID, 'ARCHIVE', GETDATE(), 'User profile archived.');
+
+            -- Delete from CW2_USER_PROFILE
+            DELETE FROM CW2_USER_PROFILE 
+            WHERE User_ID = @User_ID;
 
             -- Commit the transaction
             COMMIT;

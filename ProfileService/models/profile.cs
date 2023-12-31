@@ -7,6 +7,62 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ProfileService.Models
 {
 
+// Add this class to your existing code
+[Table("CW2_Archived_Users")]
+public class ArchivedUser
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int ArchivedUser_ID { get; set; }
+
+    public int User_ID { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string First_Name { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string Last_Name { get; set; }
+
+    [MaxLength(100)] // Adjust the length as needed
+    public string Email { get; set; }
+
+    public string About { get; set; }
+    public string Location { get; set; }
+    public string Units { get; set; }
+    public string Calorie_Counter_Info { get; set; }
+    public float Height { get; set; }
+    public float Weight { get; set; }
+    public DateTime Birthday { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string Set_Password { get; set; }
+
+    public byte[] Profile_Picture { get; set; }
+
+    public DateTime ArchiveDateTime { get; set; }
+
+    // You can add additional properties or methods as needed
+
+    // Constructor for ArchivedUser class
+    public ArchivedUser()
+    {
+        // Initialize non-nullable properties with default values
+        First_Name = "";
+        Last_Name = "";
+        Email = ""; // Add this line for the email property
+        About = "";
+        Location = "";
+        Units = "";
+        Calorie_Counter_Info = "";
+        Set_Password = "";
+        Profile_Picture = Array.Empty<byte>(); // Provide a default value for byte[]
+        Birthday = DateTime.MinValue; // Provide a default value for DateTime
+    }
+}
+
 
 [Table("CW2_USER_PROFILE")]
 public class Profile

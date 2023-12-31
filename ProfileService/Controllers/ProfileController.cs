@@ -17,7 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 [ApiController]
 public class ProfileController : ControllerBase
 {
-    private int storedUserId = -1;
     private int adminId = 12;
     private readonly AppDbContext _dbContext;
 
@@ -201,7 +200,9 @@ public async Task<ActionResult<Profile>> CreateProfile(
     if (createdProfile != null)
     {
         // Store the User_ID in the storedUserId variable
-        storedUserId = createdProfile.User_ID;
+        JwtUtils.user_id_value = Convert.ToString(createdProfile.User_ID);
+
+        Console.WriteLine(JwtUtils.user_id_value);
 
         // Return the created profile with a CreatedAtAction result
         return CreatedAtAction(nameof(GetProfile), new { id = createdProfile.User_ID }, createdProfile);
@@ -352,7 +353,6 @@ public async Task<IActionResult> DeleteProfile(int id)
         else
         {
             // User ID claim not found or Invalid
-            Console.WriteLine("Userclaim was null");
             return Unauthorized(); // 401 Unauthorized
         }
     }

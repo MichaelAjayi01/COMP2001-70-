@@ -15,6 +15,25 @@ CREATE TABLE CW2_USER_PROFILE (
     Profile_Picture VARBINARY(MAX)
 );
 
+CREATE TABLE CW2_Archived_Users (
+    ArchivedUser_ID INT IDENTITY(1,1) PRIMARY KEY,
+    User_ID INT NOT NULL,
+    First_Name NVARCHAR(50) NOT NULL,
+    Last_Name NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100),
+    About NVARCHAR(MAX),
+    Location NVARCHAR(100),
+    Units NVARCHAR(20),
+    Calorie_Counter_Info NVARCHAR(100),
+    Height FLOAT,
+    Weight FLOAT,
+    Birthday DATE,
+    Set_Password NVARCHAR(50) NOT NULL,
+    Profile_Picture VARBINARY(MAX),
+    ArchiveDateTime DATETIME
+);
+
+
 
 -- Creating CW2_Trails table
 CREATE TABLE CW2_Trails (
