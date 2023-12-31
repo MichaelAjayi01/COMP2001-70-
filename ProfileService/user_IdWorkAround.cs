@@ -4,7 +4,7 @@ using System.Linq;
 
 public static class JwtUtils
 {
-    public static string user_id_value = " "; // Marked as static
+    public static string user_id_value = "-1"; // Marked as static
 
     public static void PrintTokenClaims(string token)
     {

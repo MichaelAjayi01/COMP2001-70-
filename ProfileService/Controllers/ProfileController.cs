@@ -51,7 +51,7 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 
 
 // Add a new route for authentication
-[HttpPost("auth/api/users")]
+[HttpPost("auth/api/users")] //finished, up to requirements
 [SwaggerOperation("Authenticate a user")]
 [ProducesResponseType(typeof(string), 200)] // Assuming you return a JWT token
 [ProducesResponseType(typeof(IEnumerable<string>), 200)]
@@ -93,7 +93,7 @@ public async Task<ActionResult> AuthenticateUser([FromBody] AuthenticateUserDTO 
 
 
 
-private string GenerateJwtToken(int userId)
+private string GenerateJwtToken(int userId)//finished, up to requirements
 {
     var secretKey = _configuration["JwtSettings:SecretKey"];
 
@@ -129,7 +129,7 @@ private string GenerateJwtToken(int userId)
 [ProducesResponseType(typeof(IDictionary<string, string[]>), 400)]
 [ProducesResponseType(500)]
 [SwaggerRequestExample(typeof(CreateProfileWrapperDTO), typeof(CreateProfileExample))]
-public async Task<ActionResult<Profile>> CreateProfile(
+public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requirements
     [FromBody] CreateProfileWrapperDTO wrapperDTO)
 {
     // Validate the profile model as needed
@@ -216,12 +216,18 @@ public async Task<ActionResult<Profile>> CreateProfile(
 
 
 [HttpPut("{id}")]
-public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileDTO updateDTO)
+public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileDTO updateDTO) //finished, up to requirements
 {
     if (id != updateDTO.User_ID)
     {
         return BadRequest();
     }
+    
+    if (Convert.ToInt32(JwtUtils.user_id_value) != adminId && Convert.ToInt32(JwtUtils.user_id_value) != id)
+    {
+        return Unauthorized();
+    }
+
 
     try
     {
@@ -300,7 +306,7 @@ public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileD
 
 
 [HttpDelete("{id}")]
-public async Task<IActionResult> DeleteProfile(int id)
+public async Task<IActionResult> DeleteProfile(int id)//finished, up to requirements
 {
     try
     {
@@ -328,7 +334,7 @@ public async Task<IActionResult> DeleteProfile(int id)
                 }
             }
 
-            if (currentUserId == adminId)//edit this to account for a user deleting their own profile
+            if (currentUserId == adminId || Convert.ToInt32(JwtUtils.user_id_value) == id)//edit this to account for a user deleting their own profile
             {
                 // Call the stored procedure to delete the user profile
                 var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));
@@ -366,7 +372,7 @@ public async Task<IActionResult> DeleteProfile(int id)
 
 
 
-private bool ProfileExists(int id)
+private bool ProfileExists(int id)//finished, up to requirements
 {
     // Check if the profile exists in the local DbSet (no database query)
     return _dbContext.Profiles.Local.Any(e => e.User_ID == id);
