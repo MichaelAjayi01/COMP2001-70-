@@ -10,7 +10,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 
@@ -26,7 +25,7 @@ public class ProfileController : ControllerBase
 public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 {
     _dbContext = dbContext;
-    _configuration = configuration; // Corrected from 'configuration' to '_configuration'
+    _configuration = configuration;
 }
 
 
@@ -53,7 +52,7 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 // Add a new route for authentication
 [HttpPost("auth/api/users")] //finished, up to requirements
 [SwaggerOperation("Authenticate a user")]
-[ProducesResponseType(typeof(string), 200)] // Assuming you return a JWT token
+[ProducesResponseType(typeof(string), 200)]
 [ProducesResponseType(typeof(IEnumerable<string>), 200)]
 [ProducesResponseType(500)]
 [SwaggerRequestExample(typeof(AuthenticateUserDTO), typeof(AuthenticateUserExample))]
