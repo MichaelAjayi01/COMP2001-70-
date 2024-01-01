@@ -4,7 +4,7 @@ Profile picture should always be set to null unless you have a 64bit encoded str
 
 Grace Hopper is the admin.
 
-Both POST operations will assign you and ID will which determine your permissions.
+Both POST operations will assign you an ID which will determine your permissions.
 
 To edit your own profile, POST a new profile and then PUT the changes. Login isn't supported for profiles not on authenticator.
 
