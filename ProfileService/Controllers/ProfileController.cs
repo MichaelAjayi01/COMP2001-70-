@@ -29,16 +29,16 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 }
 
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles() //fuly implemented and up to spec
+[HttpGet]
+public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles() //fuly implemented and up to spec
+{
+    if(Convert.ToInt32(JwtUtils.user_id_value) != 12)
     {
-        if(Convert.ToInt32(JwtUtils.user_id_value) != 12)
-        {
-            return Unauthorized();
-        }
-
-        return await _dbContext.Profiles.ToListAsync();
+        return Unauthorized();
     }
+
+    return await _dbContext.Profiles.ToListAsync();
+}
 
 [HttpGet("{id}")]
 public async Task<ActionResult<object>> GetProfile(int id)//finished, now up to spec. 
@@ -161,6 +161,9 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
     // Access the profileDTO from the wrapper
     CreateProfileDTO profileDTO = wrapperDTO.profileDTO;
 
+    string salt = Convert.ToBase64String(PasswordHasher.GenerateSalt());
+    string hashedPassword = PasswordHasher.HashPassword(profileDTO.Set_Password);
+
     // Map the DTO to the actual profile entity
 #pragma warning disable CS8601 // Possible null reference assignment.
     var profile = new Profile
@@ -175,8 +178,9 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
         Height = profileDTO.Height,
         Weight = profileDTO.Weight,
         Birthday = profileDTO.Birthday,
-        Set_Password = profileDTO.Set_Password,
+        Set_Password = hashedPassword,
         Profile_Picture = profileDTO.Profile_Picture,
+        PasswordSalt = salt,
         CompletedTrails = profileDTO.CompletedTrails?.Select(ct => new UserProfileCompletedTrail
         {
             Trail = new Trail
@@ -211,12 +215,16 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
             profile.Set_Password,
             profile.Profile_Picture,
             allTrailNames,
+            profile.PasswordSalt,
             allTrailDetails);
 #pragma warning restore CS8604 // Possible null reference argument.
     });
 
     var createdProfile = await _dbContext.Profiles
-        .FirstOrDefaultAsync(p => p.Email == profileDTO.Email && p.Set_Password == profileDTO.Set_Password);
+        .FirstOrDefaultAsync(p => p.Email == profileDTO.Email && profileDTO.Set_Password == profileDTO.Set_Password);
+        
+        Console.WriteLine(profile.Set_Password);
+        Console.WriteLine(profileDTO.Set_Password);
 
     if (createdProfile != null)
     {

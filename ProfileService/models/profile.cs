@@ -95,6 +95,10 @@ public class Profile
     [MaxLength(50)]
     public string Set_Password { get; set; }
 
+    [Required]
+    [MaxLength(128)] // Adjust the length as needed
+    public string PasswordSalt { get; set; }
+
     public byte[] Profile_Picture { get; set; } // Change the type back to byte[]
 
     // Navigation properties
@@ -113,6 +117,7 @@ public class Profile
         Units = "";
         Calorie_Counter_Info = "";
         Set_Password = "";
+        PasswordSalt = ""; // Add this line for the password salt property
         Profile_Picture = Array.Empty<byte>(); // Provide a default value for byte[]
         Birthday = DateTime.MinValue; // Provide a default value for DateTime
 
@@ -121,6 +126,7 @@ public class Profile
         AuditLogs = new List<AuditLog>();
     }
 }
+
 
 
 

@@ -34,7 +34,7 @@ public static class PasswordHasher
         }
     }
 
-private static byte[] GenerateSalt()
+public static byte[] GenerateSalt()
 {
     // Generate a random salt
     byte[] salt = new byte[SaltSize];

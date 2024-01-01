@@ -12,6 +12,7 @@ CREATE TABLE CW2_USER_PROFILE (
     Weight FLOAT,
     Birthday DATE,
     Set_Password NVARCHAR(50) NOT NULL,
+    PasswordSalt NVARCHAR(128) NOT NULL,
     Profile_Picture VARBINARY(MAX)
 );
 

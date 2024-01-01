@@ -1,5 +1,3 @@
--- Insert procedure for CW2_USER_PROFILE with data insertion into CW2_Trails
-
 CREATE PROCEDURE InsertUserProfile
     @First_Name NVARCHAR(50),
     @Last_Name NVARCHAR(50),
@@ -14,12 +12,13 @@ CREATE PROCEDURE InsertUserProfile
     @Set_Password NVARCHAR(50),
     @Profile_Picture VARBINARY(MAX),
     @Trail_Name NVARCHAR(100),
-    @List_of_Trails NVARCHAR(MAX)
+    @List_of_Trails NVARCHAR(MAX),
+    @PasswordSalt NVARCHAR(128) -- Add parameter for Password Salt
 AS
 BEGIN
     -- Insert into CW2_USER_PROFILE
-    INSERT INTO CW2_USER_PROFILE (First_Name, Last_Name, Email, About, Location, Units, Calorie_Counter_Info, Height, Weight, Birthday, Set_Password, Profile_Picture)
-    VALUES (@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture);
+    INSERT INTO CW2_USER_PROFILE (First_Name, Last_Name, Email, About, Location, Units, Calorie_Counter_Info, Height, Weight, Birthday, Set_Password, Profile_Picture, PasswordSalt)
+    VALUES (@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture, @PasswordSalt);
 
     -- Insert into CW2_Trails
     DECLARE @Trail_ID INT;

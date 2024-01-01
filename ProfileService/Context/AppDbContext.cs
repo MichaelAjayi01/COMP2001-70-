@@ -56,28 +56,31 @@ namespace ProfileService.Models
             string setPassword,
             byte[] profilePicture,
             string trailName,
+            string passwordSalt,
             string listOfTrails)
         {
             // Provide a default value if profilePicture is null
     byte[] actualProfilePicture = profilePicture ?? Array.Empty<byte>();
 
     Database.ExecuteSqlRaw("EXEC InsertUserProfile " +
-        "@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, " +
-        "@Birthday, @Set_Password, @Profile_Picture, @Trail_Name, @List_of_Trails",
-        new SqlParameter("@First_Name", firstName),
-        new SqlParameter("@Last_Name", lastName),
-        new SqlParameter("@Email", email),
-        new SqlParameter("@About", about),
-        new SqlParameter("@Location", location),
-        new SqlParameter("@Units", units),
-        new SqlParameter("@Calorie_Counter_Info", calorieCounterInfo),
-        new SqlParameter("@Height", height),
-        new SqlParameter("@Weight", weight),
-        new SqlParameter("@Birthday", birthday),
-        new SqlParameter("@Set_Password", setPassword),
-        new SqlParameter("@Profile_Picture", actualProfilePicture),
-        new SqlParameter("@Trail_Name", trailName),
-        new SqlParameter("@List_of_Trails", listOfTrails));
-        }
+    "@First_Name, @Last_Name, @Email, @About, @Location, @Units, @Calorie_Counter_Info, @Height, @Weight, " +
+    "@Birthday, @Set_Password, @Profile_Picture, @Trail_Name, @List_of_Trails, @PasswordSalt",
+    new SqlParameter("@First_Name", firstName),
+    new SqlParameter("@Last_Name", lastName),
+    new SqlParameter("@Email", email),
+    new SqlParameter("@About", about),
+    new SqlParameter("@Location", location),
+    new SqlParameter("@Units", units),
+    new SqlParameter("@Calorie_Counter_Info", calorieCounterInfo),
+    new SqlParameter("@Height", height),
+    new SqlParameter("@Weight", weight),
+    new SqlParameter("@Birthday", birthday),
+    new SqlParameter("@Set_Password", setPassword),
+    new SqlParameter("@Profile_Picture", actualProfilePicture),
+    new SqlParameter("@Trail_Name", trailName),
+    new SqlParameter("@List_of_Trails", listOfTrails),
+    new SqlParameter("@PasswordSalt", passwordSalt));
+
     }
+}
 }
