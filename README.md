@@ -11,3 +11,5 @@ To edit your own profile, POST a new profile and then PUT the changes. Login isn
 Users in the authenticator app can login and do as they wish.
 
 SWAGGER URL: http://localhost:5063/swagger/index.html
+
+Assuming that in a future version, the authenticator can verify passwords.

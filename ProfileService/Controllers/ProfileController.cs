@@ -41,7 +41,7 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
     }
 
 [HttpGet("{id}")]
-public async Task<ActionResult<object>> GetProfile(int id)//finished, now up to spec.
+public async Task<ActionResult<object>> GetProfile(int id)//finished, now up to spec. 
 {
     var profile = await _dbContext.Profiles.FindAsync(id);
 
