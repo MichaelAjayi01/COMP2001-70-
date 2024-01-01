@@ -30,28 +30,44 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
+    public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles() //fuly implemented and up to spec
     {
         if(Convert.ToInt32(JwtUtils.user_id_value) != 12)
         {
             return Unauthorized();
         }
-        
+
         return await _dbContext.Profiles.ToListAsync();
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Profile>> GetProfile(int id)
+[HttpGet("{id}")]
+public async Task<ActionResult<object>> GetProfile(int id)//finished, now up to spec.
+{
+    var profile = await _dbContext.Profiles.FindAsync(id);
+
+    if (profile == null)
     {
-        var profile = await _dbContext.Profiles.FindAsync(id);
-
-        if (profile == null)
-        {
-            return NotFound();
-        }
-
-        return profile;
+        return NotFound();
     }
+
+    if (Convert.ToInt32(JwtUtils.user_id_value) != adminId && Convert.ToInt32(JwtUtils.user_id_value) != id)
+    {
+        // Return a restricted version of the profile or any other response as needed
+        var restrictedProfile = new
+        {
+            profile.First_Name,
+            profile.Last_Name,
+            profile.About,
+            // Include other properties that should be visible to non-admin users
+        };
+
+        return restrictedProfile;
+    }
+
+    // Return the full profile for admin users or users with access
+    return profile;
+}
+
 
 
 // Add a new route for authentication
