@@ -32,6 +32,11 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
     {
+        if(Convert.ToInt32(JwtUtils.user_id_value) != 12)
+        {
+            return Unauthorized();
+        }
+        
         return await _dbContext.Profiles.ToListAsync();
     }
 
@@ -203,8 +208,6 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
         var newToken = GenerateJwtToken(createdProfile.User_ID);
         string revealToken = newToken;
         JwtUtils.PrintTokenClaims(revealToken);
-
-        Console.WriteLine(JwtUtils.user_id_value);
 
         // Return the created profile with a CreatedAtAction result
         return CreatedAtAction(nameof(GetProfile), new { id = createdProfile.User_ID }, createdProfile);
