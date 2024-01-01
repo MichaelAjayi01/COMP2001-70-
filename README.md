@@ -9,3 +9,5 @@ Both POST operations will assign you and ID will which determine your permission
 To edit your own profile, POST a new profile and then PUT the changes. Login isn't supported for profiles not on authenticator.
 
 Users in the authenticator app can login and do as they wish.
+
+SWAGGER URL: http://localhost:5063/swagger/index.html
