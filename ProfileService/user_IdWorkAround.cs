@@ -15,12 +15,10 @@ public static class JwtUtils
 
             if (jsonToken != null)
             {
-                Console.WriteLine("Token Claims:");
                 var firstClaim = jsonToken.Claims.FirstOrDefault();
 
                 if (firstClaim != null)
                 {
-                    Console.WriteLine($"{firstClaim.Type}: {firstClaim.Value}");//delete debugging
                     user_id_value = firstClaim.Value; // Accessed in a static method
                 }
                 else
