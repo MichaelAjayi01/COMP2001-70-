@@ -15,6 +15,7 @@ public class CreateProfileDTO
         Calorie_Counter_Info = string.Empty;
         Set_Password = string.Empty;
         CompletedTrails = new List<CreateCompletedTrailDTO>();
+        
     }
 
     public string First_Name { get; set; }

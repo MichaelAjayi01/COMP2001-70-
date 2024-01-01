@@ -222,9 +222,6 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
 
     var createdProfile = await _dbContext.Profiles
         .FirstOrDefaultAsync(p => p.Email == profileDTO.Email && profileDTO.Set_Password == profileDTO.Set_Password);
-        
-        Console.WriteLine(profile.Set_Password);
-        Console.WriteLine(profileDTO.Set_Password);
 
     if (createdProfile != null)
     {
@@ -244,6 +241,9 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
 [HttpPut("{id}")]
 public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileDTO updateDTO) //finished, up to requirements
 {
+
+    string salt = Convert.ToBase64String(PasswordHasher.GenerateSalt());
+
     if (id != updateDTO.User_ID)
     {
         return BadRequest();
@@ -268,46 +268,52 @@ public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileD
 #pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
             var profile = new Profile
         {
-            User_ID = updateDTO.User_ID,
-            First_Name = profileDTO.First_Name,
-            Last_Name = profileDTO.Last_Name,
-            Email = profileDTO.Email,
-            About = profileDTO.About,
-            Location = profileDTO.Location,
-            Units = profileDTO.Units,
-            Calorie_Counter_Info = profileDTO.Calorie_Counter_Info,
-            Height = profileDTO.Height,
-            Weight = profileDTO.Weight,
-            Birthday = profileDTO.Birthday,
-            Set_Password = profileDTO.Set_Password,
-            Profile_Picture = profileDTO.Profile_Picture ?? new byte[0], // Handle null case, replace with an appropriate default value
-            CompletedTrails = profileDTO.CompletedTrails?.Select(ct => ct != null ? new UserProfileCompletedTrail
-            {
-                // Map properties accordingly
-            } : null).ToList(),
+        User_ID = updateDTO.User_ID,
+        First_Name = profileDTO.First_Name,
+        Last_Name = profileDTO.Last_Name,
+        Email = profileDTO.Email,
+        About = profileDTO.About,
+        Location = profileDTO.Location,
+        Units = profileDTO.Units,
+        Calorie_Counter_Info = profileDTO.Calorie_Counter_Info,
+        Height = profileDTO.Height,
+        Weight = profileDTO.Weight,
+        Birthday = profileDTO.Birthday,
+        Set_Password = profileDTO.Set_Password,
+        Profile_Picture = profileDTO.Profile_Picture ?? new byte[0], // Handle null case, replace with an appropriate default value
+        PasswordSalt = salt, // Add the PasswordSalt property
+        CompletedTrails = profileDTO.CompletedTrails?.Select(ct => ct != null ? new UserProfileCompletedTrail
+        {
+            // Map properties accordingly
+        } : null).ToList(),
 
         };
 #pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
 #pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8602 // Dereference of a possibly null reference
 
-            // Call the stored procedure to update the user profile
-            await _dbContext.Database.ExecuteSqlRawAsync("EXEC UpdateUserProfile " +
-            "@User_ID, @First_Name, @Last_Name, @Email, @About, @Location, @Units, " +
-            "@Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture",
-            new SqlParameter("@User_ID", profile.User_ID),
-            new SqlParameter("@First_Name", profile.First_Name),
-            new SqlParameter("@Last_Name", profile.Last_Name),
-            new SqlParameter("@Email", profile.Email),
-            new SqlParameter("@About", profile.About),
-            new SqlParameter("@Location", profile.Location),
-            new SqlParameter("@Units", profile.Units),
-            new SqlParameter("@Calorie_Counter_Info", profile.Calorie_Counter_Info),
-            new SqlParameter("@Height", profile.Height),
-            new SqlParameter("@Weight", profile.Weight),
-            new SqlParameter("@Birthday", profile.Birthday),
-            new SqlParameter("@Set_Password", profile.Set_Password),
-            new SqlParameter("@Profile_Picture", profile.Profile_Picture));
+    string hashedPassword = PasswordHasher.HashPassword(profile.Set_Password);
+
+
+    // Call the stored procedure to update the user profile
+    await _dbContext.Database.ExecuteSqlRawAsync("EXEC UpdateUserProfile " +
+    "@User_ID, @First_Name, @Last_Name, @Email, @About, @Location, @Units, " +
+    "@Calorie_Counter_Info, @Height, @Weight, @Birthday, @Set_Password, @Profile_Picture, @PasswordSalt",
+    new SqlParameter("@User_ID", profile.User_ID),
+    new SqlParameter("@First_Name", profile.First_Name),
+    new SqlParameter("@Last_Name", profile.Last_Name),
+    new SqlParameter("@Email", profile.Email),
+    new SqlParameter("@About", profile.About),
+    new SqlParameter("@Location", profile.Location),
+    new SqlParameter("@Units", profile.Units),
+    new SqlParameter("@Calorie_Counter_Info", profile.Calorie_Counter_Info),
+    new SqlParameter("@Height", profile.Height),
+    new SqlParameter("@Weight", profile.Weight),
+    new SqlParameter("@Birthday", profile.Birthday),
+    new SqlParameter("@Set_Password", hashedPassword),
+    new SqlParameter("@Profile_Picture", profile.Profile_Picture),
+    new SqlParameter("@PasswordSalt", salt));
+
 
         return NoContent();
     }

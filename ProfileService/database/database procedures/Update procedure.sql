@@ -12,7 +12,8 @@ CREATE PROCEDURE UpdateUserProfile
     @Weight FLOAT,
     @Birthday DATE,
     @Set_Password NVARCHAR(50),
-    @Profile_Picture VARBINARY(MAX)
+    @Profile_Picture VARBINARY(MAX),
+    @PasswordSalt NVARCHAR(128) -- Add parameter for Password Salt
 AS
 BEGIN
     UPDATE CW2_USER_PROFILE
@@ -28,7 +29,8 @@ BEGIN
         Weight = @Weight,
         Birthday = @Birthday,
         Set_Password = @Set_Password,
-        Profile_Picture = @Profile_Picture
+        Profile_Picture = @Profile_Picture,
+        PasswordSalt = @PasswordSalt -- Update the PasswordSalt column
     WHERE
         User_ID = @User_ID;
 
