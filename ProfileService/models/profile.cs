@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ProfileService.Models
 {
 
-// Add this class to your existing code
 [Table("CW2_Archived_Users")]
 public class ArchivedUser
 {

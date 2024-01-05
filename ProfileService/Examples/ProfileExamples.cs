@@ -1,6 +1,3 @@
-// Assuming the folder structure is like this:
-// YourProjectRoot/Examples/CreateProfileExample.cs
-
 using Swashbuckle.AspNetCore.Filters;
 
 namespace ProfileExamples.Examples

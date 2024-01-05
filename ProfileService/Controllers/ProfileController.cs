@@ -32,7 +32,7 @@ public ProfileController(AppDbContext dbContext, IConfiguration configuration)
 [HttpGet]
 public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles() //fuly implemented and up to spec
 {
-    if(Convert.ToInt32(JwtUtils.user_id_value) != 12)
+    if(Convert.ToInt32(JwtUtils.user_id_value) != adminId)
     {
         return Unauthorized();
     }
