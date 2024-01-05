@@ -13,7 +13,7 @@ CREATE PROCEDURE UpdateUserProfile
     @Birthday DATE,
     @Set_Password NVARCHAR(50),
     @Profile_Picture VARBINARY(MAX),
-    @PasswordSalt NVARCHAR(128) -- Add parameter for Password Salt
+    @PasswordSalt NVARCHAR(128)
 AS
 BEGIN
     UPDATE CW2_USER_PROFILE

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using ProfileService.Models; // Add the namespace where your entities are defined
+using ProfileService.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

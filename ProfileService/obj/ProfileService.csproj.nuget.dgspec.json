@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\44783\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {}
+    "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {}
   },
   "projects": {
-    "C:\\Users\\44783\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {
+    "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\44783\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
+        "projectUniqueName": "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
         "projectName": "ProfileService",
-        "projectPath": "C:\\Users\\44783\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
-        "packagesPath": "C:\\Users\\44783\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\44783\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\obj\\",
+        "projectPath": "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
+        "packagesPath": "C:\\Users\\milli\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\44783\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\milli\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

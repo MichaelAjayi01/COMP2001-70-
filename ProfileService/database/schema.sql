@@ -3,7 +3,7 @@ CREATE TABLE CW2_USER_PROFILE (
     User_ID INT IDENTITY(1,1) PRIMARY KEY,
     First_Name NVARCHAR(50) NOT NULL,
     Last_Name NVARCHAR(50) NOT NULL,
-    Email NVARCHAR(100), -- Add this line for the email field
+    Email NVARCHAR(100),
     About NVARCHAR(MAX),
     Location NVARCHAR(100),
     Units NVARCHAR(20),

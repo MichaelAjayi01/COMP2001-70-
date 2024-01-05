@@ -1,7 +1,7 @@
 CREATE PROCEDURE InsertUserProfile
     @First_Name NVARCHAR(50),
     @Last_Name NVARCHAR(50),
-    @Email NVARCHAR(100), -- Add parameter for Email
+    @Email NVARCHAR(100),
     @About NVARCHAR(MAX),
     @Location NVARCHAR(100),
     @Units NVARCHAR(20),
@@ -13,7 +13,7 @@ CREATE PROCEDURE InsertUserProfile
     @Profile_Picture VARBINARY(MAX),
     @Trail_Name NVARCHAR(100),
     @List_of_Trails NVARCHAR(MAX),
-    @PasswordSalt NVARCHAR(128) -- Add parameter for Password Salt
+    @PasswordSalt NVARCHAR(128)
 AS
 BEGIN
     -- Insert into CW2_USER_PROFILE

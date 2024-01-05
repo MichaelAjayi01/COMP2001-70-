@@ -186,9 +186,7 @@ public async Task<ActionResult<Profile>> CreateProfile( //finished, up to requir
             Trail = new Trail
             {
                 Trail_Name = ct.Trail_Name,
-                // Add other necessary properties for trail
             }
-            // Add other necessary properties for completed trail
         }).ToList()
     };
 #pragma warning restore CS8601 // Possible null reference assignment.
@@ -281,7 +279,7 @@ public async Task<IActionResult> UpdateProfile(int id, [FromBody] UpdateProfileD
         Birthday = profileDTO.Birthday,
         Set_Password = profileDTO.Set_Password,
         Profile_Picture = profileDTO.Profile_Picture ?? new byte[0], // Handle null case, replace with an appropriate default value
-        PasswordSalt = salt, // Add the PasswordSalt property
+        PasswordSalt = salt,
         CompletedTrails = profileDTO.CompletedTrails?.Select(ct => ct != null ? new UserProfileCompletedTrail
         {
             // Map properties accordingly
@@ -366,7 +364,7 @@ public async Task<IActionResult> DeleteProfile(int id)//finished, up to requirem
                 }
             }
 
-            if (currentUserId == adminId || Convert.ToInt32(JwtUtils.user_id_value) == id)//edit this to account for a user deleting their own profile
+            if (currentUserId == adminId || Convert.ToInt32(JwtUtils.user_id_value) == id)
             {
                 // Call the stored procedure to delete the user profile
                 var rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteUserProfile @User_ID", new SqlParameter("@User_ID", id));

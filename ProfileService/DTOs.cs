@@ -42,7 +42,6 @@ public class CreateCompletedTrailDTO
     }
 
     public string? Trail_Name { get; set; }
-    // Add other necessary properties for completed trail
 }
 
 public class CreateProfileWrapperDTO

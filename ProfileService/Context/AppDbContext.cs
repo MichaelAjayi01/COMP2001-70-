@@ -11,7 +11,6 @@ namespace ProfileService.Models
         public DbSet<CompletedTrail> CompletedTrails { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
-        // Add this constructor
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
