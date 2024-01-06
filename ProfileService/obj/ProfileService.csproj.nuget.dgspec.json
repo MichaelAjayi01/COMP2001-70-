@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {}
+    "C:\\Users\\Michael\\Desktop\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {}
   },
   "projects": {
-    "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {
+    "C:\\Users\\Michael\\Desktop\\COMP2001-70-\\ProfileService\\ProfileService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
+        "projectUniqueName": "C:\\Users\\Michael\\Desktop\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
         "projectName": "ProfileService",
-        "projectPath": "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
-        "packagesPath": "C:\\Users\\milli\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\milli\\OneDrive\\Documents\\GitHub\\COMP2001-70-\\ProfileService\\obj\\",
+        "projectPath": "C:\\Users\\Michael\\Desktop\\COMP2001-70-\\ProfileService\\ProfileService.csproj",
+        "packagesPath": "C:\\Users\\Michael\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Michael\\Desktop\\COMP2001-70-\\ProfileService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\milli\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Michael\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
