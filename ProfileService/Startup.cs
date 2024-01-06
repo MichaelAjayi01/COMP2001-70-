@@ -13,53 +13,53 @@ public class Startup
         Configuration = configuration;
     }
 
-public void ConfigureServices(IServiceCollection services)
-{
-    // Configure DbContext with the specified connection string
-    services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-    // Other service configurations...
-
-    services.AddControllers();
-
-    // Add Swagger
-    services.AddSwaggerGen(c =>
+    public void ConfigureServices(IServiceCollection services)
     {
-        c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
-    });
+        // Configure DbContext with the specified connection string
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-    // Add JWT authentication
-    var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
+        // Other service configurations...
 
-    if (secretKey != null)
-    {
-        var key = Encoding.ASCII.GetBytes(secretKey);
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // Specify the default authentication scheme
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+        services.AddControllers();
+
+        // Add Swagger
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
+        });
+
+        // Add JWT authentication
+        var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
+
+        if (secretKey != null)
+        {
+            var key = Encoding.ASCII.GetBytes(secretKey);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // Specify the default authentication scheme
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
-        
-    }
-    else
-    {
-        // Handle the case where the secret key is null (throw an exception, provide a default, etc.)
-        throw new InvalidOperationException("JWT secret key is null.");
-    }
 
-    // Add authorization globally
-    services.AddAuthorization();
-}
+        }
+        else
+        {
+            // Handle the case where the secret key is null (throw an exception, provide a default, etc.)
+            throw new InvalidOperationException("JWT secret key is null.");
+        }
+
+        // Add authorization globally
+        services.AddAuthorization();
+    }
 
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -83,11 +83,11 @@ public void ConfigureServices(IServiceCollection services)
         app.UseStaticFiles();
 
         app.UseRouting();
-    
+
         app.UseAuthentication(); // Adds the authentication middleware to the pipeline
         app.UseAuthorization();  // Adds the authorization middleware to the pipeline
 
-        
+
 
         app.UseEndpoints(endpoints =>
         {

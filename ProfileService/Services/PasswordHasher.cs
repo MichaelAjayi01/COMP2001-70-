@@ -1,5 +1,3 @@
-// Assuming this is in a file named PasswordHasher.cs
-
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -34,11 +32,11 @@ public static class PasswordHasher
         }
     }
 
-public static byte[] GenerateSalt()
-{
-    // Generate a random salt
-    byte[] salt = new byte[SaltSize];
-    RandomNumberGenerator.Fill(salt);
-    return salt;
-}
+    public static byte[] GenerateSalt()
+    {
+        // Generate a random salt
+        byte[] salt = new byte[SaltSize];
+        RandomNumberGenerator.Fill(salt);
+        return salt;
+    }
 }
