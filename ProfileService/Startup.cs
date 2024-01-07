@@ -1,8 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using ProfileService.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ProfileService.Models;
 using System.Text;
+using System;
+using System.Threading.Tasks;
 
 public class Startup
 {
@@ -48,8 +50,6 @@ public class Startup
                         ValidateAudience = false
                     };
                 });
-
-
         }
         else
         {
@@ -61,33 +61,35 @@ public class Startup
         services.AddAuthorization();
     }
 
-
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProfileService API V1");
-            });
-        }
-        else
-        {
-            app.UseExceptionHandler("/Home/Error");
-            app.UseHsts();
         }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProfileService API V1");
+        });
+
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Path == "/")
+            {
+                context.Response.Redirect("/swagger/index.html");
+            }
+            await next();
+        });
+
         app.UseRouting();
 
         app.UseAuthentication(); // Adds the authentication middleware to the pipeline
         app.UseAuthorization();  // Adds the authorization middleware to the pipeline
-
-
 
         app.UseEndpoints(endpoints =>
         {
