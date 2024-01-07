@@ -1,2 +1,0 @@
-GET http://localhost:5063/api/profiles
-Accept: application/json
