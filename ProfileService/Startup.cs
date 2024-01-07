@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProfileService.Models;
 using System.Text;
-using System;
-using System.Threading.Tasks;
 
 public class Startup
 {
@@ -17,20 +15,15 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddControllers();
+
         // Configure DbContext with the specified connection string
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-        // Other service configurations...
-
-        services.AddControllers();
-
+        services.AddEndpointsApiExplorer();
         // Add Swagger
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ProfileService API", Version = "v1" });
-        });
-
+        services.AddSwaggerGen();
         // Add JWT authentication
         var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
 
@@ -63,30 +56,17 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        app.UseRouting();
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProfileService API V1");
+            c.SwaggerEndpoint("../swagger/v1/swagger.json", "Profile Service");
         });
 
-        app.Use(async (context, next) =>
-        {
-            if (context.Request.Path == "/")
-            {
-                context.Response.Redirect("/swagger/index.html");
-            }
-            await next();
-        });
 
-        app.UseRouting();
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
         app.UseAuthentication(); // Adds the authentication middleware to the pipeline
         app.UseAuthorization();  // Adds the authorization middleware to the pipeline
