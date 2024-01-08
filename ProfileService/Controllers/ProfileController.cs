@@ -28,7 +28,7 @@ public class ProfileController : ControllerBase
         _configuration = configuration;
     }
 
-
+  
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles() //fuly implemented and up to spec
     {

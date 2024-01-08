@@ -3,6 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProfileService.Models;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
+
+
+
 
 public class Startup
 {
@@ -17,13 +23,17 @@ public class Startup
     {
         services.AddControllers();
 
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Profile Service", Version = "v1" });
+        });
+
         // Configure DbContext with the specified connection string
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddEndpointsApiExplorer();
-        // Add Swagger
-        services.AddSwaggerGen();
+
         // Add JWT authentication
         var secretKey = Configuration.GetValue<string>("JwtSettings:SecretKey");
 
@@ -57,13 +67,31 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
 
-        app.UseSwagger(); // no options
-        app.UseSwaggerUI(options =>
+        if (env.IsDevelopment()) 
         {
-            options.SwaggerEndpoint("/ProfileService/swagger/v1/swagger.json", "Profile Service");
-            // other options
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseRouting();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "Profile Service");
+            c.RoutePrefix = string.Empty; // Set the base path for Swagger UI
         });
 
+        //redirect requests to the root url to the swagger UI
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Path == "/")
+            {
+                context.Response.Redirect("/swagger/index.html");
+                return;
+            }
+
+            await next();
+        });
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
