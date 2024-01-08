@@ -10,6 +10,6 @@ To edit your own profile, POST a new profile and then PUT the changes. Login isn
 
 Users in the authenticator app can login and do as they wish.
 
-SWAGGER URL: http://localhost:5063/swagger/index.html
+suspected issue with hosting server as 404 is displayed no matter what. Every known documented fix has been exhausted.
 
 Assuming that in a future version, the authenticator can verify passwords.
