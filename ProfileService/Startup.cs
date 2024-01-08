@@ -56,12 +56,12 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseRouting();
 
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
+        app.UseSwagger(); // no options
+        app.UseSwaggerUI(options =>
         {
-            c.SwaggerEndpoint("../swagger/v1/swagger.json", "Profile Service");
+            options.SwaggerEndpoint("/ProfileService/swagger/v1/swagger.json", "Profile Service");
+            // other options
         });
 
 

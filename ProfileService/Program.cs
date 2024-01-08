@@ -22,13 +22,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("../swagger/v1/swagger.json", "Profile Service");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Profile Service");
 });
 
+
 app.UseHttpsRedirection();
+
+
+// Use default files and static files middleware
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 

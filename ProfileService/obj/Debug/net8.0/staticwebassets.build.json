@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "wgqH8+RngEr5CNuvFe40HpZVia7iY0pfN6XBEcYL8sQ=",
+  "Hash": "JnVP6Y4GKaA4ICscW3dr1CnDdwqjLQAjI0E5fip1sKM=",
   "Source": "ProfileService",
   "BasePath": "_content/ProfileService",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ProfileService\\wwwroot",
+      "Source": "ProfileService",
+      "ContentRoot": "C:\\Users\\Michael\\Desktop\\COMP2001-70-\\ProfileService\\wwwroot\\",
+      "BasePath": "_content/ProfileService",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }

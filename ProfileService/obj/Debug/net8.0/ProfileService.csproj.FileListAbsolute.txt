@@ -445,3 +445,4 @@ C:\Users\Michael\Desktop\COMP2001-70-\ProfileService\obj\Debug\net8.0\refint\Pro
 C:\Users\Michael\Desktop\COMP2001-70-\ProfileService\obj\Debug\net8.0\ProfileService.pdb
 C:\Users\Michael\Desktop\COMP2001-70-\ProfileService\obj\Debug\net8.0\ProfileService.genruntimeconfig.cache
 C:\Users\Michael\Desktop\COMP2001-70-\ProfileService\obj\Debug\net8.0\ref\ProfileService.dll
+C:\Users\Michael\Desktop\COMP2001-70-\ProfileService\bin\Debug\net8.0\ProfileService.staticwebassets.runtime.json
