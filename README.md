@@ -10,6 +10,8 @@ To edit your own profile, POST a new profile and then PUT the changes. Login isn
 
 Users in the authenticator app can login and do as they wish.
 
-suspected issue with hosting server as 404 is displayed no matter what. Every known documented fix has been exhausted.
+suspected issue with hosting server as 500 is displayed no matter what. Every known documented fix has been exhausted.
+
+API URL: https://web.socem.plymouth.ac.uk/COMP2001/Majayi/api/swagger/index.html
 
 Assuming that in a future version, the authenticator can verify passwords.
